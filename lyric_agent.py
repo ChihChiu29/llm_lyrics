@@ -15,6 +15,8 @@ class LyricAgent:
         self.history = []
         self.description_index = 0
         self.lyrics_index = 0
+        self.styles_index = 0
+        self.song_title = ""
 
     def run(self):
         print("=== 中文说唱歌词创作助手 (v2) ===")
@@ -28,6 +30,8 @@ class LyricAgent:
                 self.handle_song_description()
             elif self.state == "SONG_LYRICS":
                 self.handle_song_lyrics()
+            elif self.state == "SONG_STYLES":
+                self.handle_song_styles()
             elif self.state == "ENDING":
                 self.handle_ending()
 
@@ -40,6 +44,7 @@ class LyricAgent:
             print("/m, /multiline - 进入多行输入模式 (在独立一行输入 'END' 结束)")
             print("/new           - 开启全新创作 (清空当前进度)")
             print("/desc          - (歌词阶段可用) 返回修改歌曲描述")
+            print("/lyric         - (风格阶段可用) 返回修改歌词")
             print("/quit          - 退出程序")
             print("----------------\n")
             return self.handle_input(prompt_text)
@@ -72,6 +77,12 @@ class LyricAgent:
                 return "/desc"
             else:
                 print("当前不在歌词创作阶段，无法返回描述阶段。")
+        elif user_input.lower() == "/lyric":
+            if self.state == "SONG_STYLES":
+                self.state = "SONG_LYRICS"
+                return "/lyric"
+            else:
+                print("当前不在风格讨论阶段，无法返回歌词阶段。")
         return user_input
 
     def clear_tmp_files(self):
@@ -91,14 +102,17 @@ class LyricAgent:
             print(f"获取模型列表失败: {e}")
             return []
 
-    def call_ollama(self, prompt, system_prompt="", stream=True):
+    def call_ollama(self, prompt, system_prompt="", stream=True, temperature=0.7):
         payload = {
             "model": self.model,
             "messages": [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": prompt}
             ],
-            "stream": stream
+            "stream": stream,
+            "options": {
+                "temperature": temperature
+            }
         }
         try:
             resp = requests.post(f"{OLLAMA_API_URL}/chat", json=payload, stream=stream)
@@ -145,11 +159,22 @@ class LyricAgent:
             f"- 如果用户提出了任何修改要求、指出了错误、或者表达了不满意（如 '可是...', '修改...', '换掉...'），必须回答 'NO'。\n"
             f"- 仅输出 'YES' 或 'NO'。"
         )
-        result = self.call_ollama(check_prompt, stream=False).strip().upper()
+        result = self.call_ollama(check_prompt, stream=False, temperature=0).strip().upper()
         return "YES" in result
 
     def resume_workflow(self):
         # Determine state by looking at tmp files
+        style_files = sorted(glob.glob("tmp_song_styles_*.md"), key=lambda x: int(re.search(r'(\d+)', x).group(1)))
+        if style_files:
+            self.styles_index = int(re.search(r'(\d+)', style_files[-1]).group(1))
+            self.state = "SONG_STYLES"
+            self.load_init()
+            if os.path.exists("tmp_song_title.md"):
+                with open("tmp_song_title.md", 'r', encoding='utf-8') as f:
+                    self.song_title = f.read().strip()
+            print(f"已恢复到风格建议阶段 (版本 {self.styles_index})。")
+            return
+
         lyrics_files = sorted(glob.glob("tmp_song_lyrics_*.md"), key=lambda x: int(re.search(r'(\d+)', x).group(1)))
         if lyrics_files:
             self.lyrics_index = int(re.search(r'(\d+)', lyrics_files[-1]).group(1))
@@ -190,6 +215,9 @@ class LyricAgent:
                 if s: self.style = s.group(1).strip()
 
     def handle_init(self):
+        print("\n" + "="*20)
+        print(" [阶段: 初始设置] ")
+        print("="*20)
         models = self.get_ollama_models()
         if not models:
             print("未找到 Ollama 模型。请确保 Ollama 正在运行。")
@@ -242,10 +270,19 @@ class LyricAgent:
         self.state = "SONG_DESCRIPTION"
 
     def handle_song_description(self):
+        print("\n" + "="*20)
+        print(" [阶段: 歌曲描述] ")
+        print("="*20)
         if self.description_index == 0:
-            print("\n正在生成歌曲描述/故事场景...")
-            prompt = f"请为一首风格为 '{self.style}' 的中文歌曲，创作一个简短的描述、故事背景或捕捉的场景。"
-            desc = self.call_ollama(prompt)
+            print("\n正在生成歌曲描述/故事场景 (High Variance Mode)...")
+            prompt = (
+                f"请为一首风格为 '{self.style}' 的中文歌曲，创作一个独特的故事背景或视觉场景。\n"
+                f"要求：\n"
+                f"1. 极力增加差异化：每次生成的切入角度应完全不同。尝试在宏大叙事、微观细节、冷峻现实、抽象意境、生活琐事、虚构时空等不同维度间随机切换。\n"
+                f"2. 主题多样性：不要受限，可以涉及任何符合风格的主题。避免使用陈词滥调的意象。\n"
+                f"3. 灵感激发：描述应具有强烈的画面感或独特的情感基调，为后续歌词创作提供有趣的‘锚点’。"
+            )
+            desc = self.call_ollama(prompt, temperature=1.3)
             self.description_index = 1
             filename = f"tmp_song_description_{self.description_index:02d}.md"
             with open(filename, 'w', encoding='utf-8') as f:
@@ -291,6 +328,9 @@ class LyricAgent:
             f.write(new_desc)
 
     def handle_song_lyrics(self):
+        print("\n" + "="*20)
+        print(" [阶段: 歌词创作] ")
+        print("="*20)
         approved_desc = ""
         if os.path.exists("tmp_song_approved.md"):
             with open("tmp_song_approved.md", 'r', encoding='utf-8') as f:
@@ -327,43 +367,15 @@ class LyricAgent:
         if suggestion == "/desc": return
 
         if self.check_approval(suggestion):
-            print("\n正在生成标题并保存...")
+            print("\n正在生成标题并进入风格讨论...")
             title_prompt = f"请为以下歌词取一个简洁的标题。注意：仅输出标题，不要任何多余的解释、标点或引言。如果可能，标题在10个字以内。\n歌词：\n{lyrics}"
             title = self.call_ollama(title_prompt, stream=False).strip().replace("\"", "").replace("'", "")
-            # 取第一行并清理非法字符，限制长度
-            title_first_line = title.split("\n")[0].strip()
-            safe_title = re.sub(r'[\\/*?:"<>|\r\n\t]', "", title_first_line)
-            if not safe_title:
-                safe_title = f"song_{self.lyrics_index:02d}"
-            safe_title = safe_title[:50] # 限制长度以防万一
-
-            # SUNO Style Prompt Generation
-            print("正在生成 SUNO 风格提示词...")
-            given_styles_content = ""
-            if os.path.exists("song_style_prompts.md"):
-                with open("song_style_prompts.md", 'r', encoding='utf-8') as f:
-                    all_given_styles = f.read()
-                
-                pick_prompt = f"从以下可选风格列表中，挑选出最适合这首歌词的5个风格。按匹配程度从高到低排序。仅输出这5个风格，每个风格一行，不要任何编号或解释。\n\n歌词：\n{lyrics}\n\n风格列表：\n{all_given_styles}"
-                picked = self.call_ollama(pick_prompt, stream=False).strip().split('\n')
-                given_styles_content = "\n=== Given ===\n\n" + "\n\n".join([f"- {s.strip().lstrip('- ')}" for s in picked if s.strip()][:5]) + "\n"
-
-            hiphop_prompt = f"基于以下歌词，创作5个最适合的 Hip-hop 风格提示词（适用于 SUNO）。要求：风格独特且具体，包含节奏、人声特征、氛围等描述。仅输出这5个风格，每个风格一行，不要任何编号或解释。\n\n歌词：\n{lyrics}"
-            hiphop_styles = self.call_ollama(hiphop_prompt, stream=False).strip().split('\n')
-            hiphop_content = "\n=== hiphop ===\n\n" + "\n\n".join([f"- {s.strip().lstrip('- ')}" for s in hiphop_styles if s.strip()][:5]) + "\n"
-
-            any_prompt = f"基于以下歌词，创作5个你认为最适合的任意音乐风格提示词（适用于 SUNO）。不限风格，可以是 Pop, Rock, Electronic 等。要求：描述详细且富有创意。仅输出这5个风格，每个风格一行，不要任何编号或解释。\n\n歌词：\n{lyrics}"
-            any_styles = self.call_ollama(any_prompt, stream=False).strip().split('\n')
-            any_content = "\n=== any ===\n\n" + "\n\n".join([f"- {s.strip().lstrip('- ')}" for s in any_styles if s.strip()][:5]) + "\n"
+            self.song_title = title.split("\n")[0].strip()
+            with open("tmp_song_title.md", 'w', encoding='utf-8') as f:
+                f.write(self.song_title)
             
-            with open(f"{safe_title}.txt", 'w', encoding='utf-8') as f:
-                f.write(f"{title_first_line}\n\n{lyrics}\n")
-                f.write(given_styles_content)
-                f.write(hiphop_content)
-                f.write(any_content)
-
-            print(f"歌词及风格提示词已保存到 {safe_title}.txt")
-            self.state = "ENDING"
+            self.state = "SONG_STYLES"
+            self.styles_index = 0
             return
 
         print("\n正在修改歌词...")
@@ -374,7 +386,98 @@ class LyricAgent:
         with open(new_filename, 'w', encoding='utf-8') as f:
             f.write(new_lyrics)
 
+    def handle_song_styles(self):
+        print("\n" + "="*20)
+        print(" [阶段: 风格讨论] ")
+        print("="*20)
+        filename = f"tmp_song_lyrics_{self.lyrics_index:02d}.md"
+        with open(filename, 'r', encoding='utf-8') as f:
+            lyrics = f.read()
+
+        if self.styles_index == 0:
+            print("\n正在生成 SUNO 风格建议 (包含理由)...")
+            
+            given_pool = ""
+            if os.path.exists("song_style_prompts.md"):
+                with open("song_style_prompts.md", 'r', encoding='utf-8') as f:
+                    given_pool = f.read()
+
+            prompt = (
+                f"基于以下歌词，为 SUNO AI 创作三组风格提示词 (English)，并为每组中的每个选择提供简短的理由 (Chinese)。\n\n"
+                f"歌词：\n{lyrics}\n\n"
+                f"要求：\n"
+                f"1. === Given ===: 从以下列表中挑选最适合的5个风格。\n{given_pool}\n\n"
+                f"2. === hiphop ===: 创作5个独特的 Hip-hop 风格提示词。\n"
+                f"3. === any ===: 创作5个任意流派的创意风格提示词。\n\n"
+                f"格式要求 (必须严格遵守):\n"
+                f"对于每组，按以下格式输出：\n"
+                f"### [组名]\n"
+                f"- Style Prompt (English)\n"
+                f"  Reason: [理由]\n"
+                f"(以此类推...)\n"
+            )
+            styles_content = self.call_ollama(prompt)
+            self.styles_index = 1
+            style_filename = f"tmp_song_styles_{self.styles_index:02d}.md"
+            with open(style_filename, 'w', encoding='utf-8') as f:
+                f.write(styles_content)
+        else:
+            style_filename = f"tmp_song_styles_{self.styles_index:02d}.md"
+            with open(style_filename, 'r', encoding='utf-8') as f:
+                styles_content = f.read()
+
+        print(f"\n--- 风格建议 (版本 {self.styles_index:02d}) ---")
+        print(styles_content)
+        print("---------------------------------------")
+
+        suggestion = self.handle_input("\n请输入修改建议 (或输入 'ok' 批准, '/lyric' 返回歌词阶段): ")
+        if suggestion == "/new": return
+        if suggestion == "/lyric": return
+
+        if self.check_approval(suggestion):
+            print("\n正在保存最终文件...")
+            # 解析内容，只保留 Prompt 用于文件
+            final_content = f"{self.song_title}\n\n{lyrics}\n"
+            
+            for group in ["Given", "hiphop", "any"]:
+                final_content += f"\n=== {group} ===\n\n"
+                # 使用正则表达式提取每个 - 后面直到换行的内容
+                pattern = rf"### \[?{group}\]?\n(.*?)(?=###|$)"
+                match = re.search(pattern, styles_content, re.DOTALL | re.IGNORECASE)
+                if match:
+                    group_text = match.group(1)
+                    prompts = re.findall(r"^- (.*?)$", group_text, re.MULTILINE)
+                    for p in prompts[:5]:
+                        final_content += f"- {p.strip()}\n\n"
+
+            # Sanitization
+            safe_title = re.sub(r'[\\/*?:"<>|\r\n\t]', "", self.song_title)
+            if not safe_title: safe_title = f"song_{self.lyrics_index:02d}"
+            safe_title = safe_title[:50]
+
+            if not os.path.exists("lyrics"):
+                os.makedirs("lyrics")
+            
+            file_path = os.path.join("lyrics", f"{safe_title}.txt")
+            with open(file_path, 'w', encoding='utf-8') as f:
+                f.write(final_content)
+
+            print(f"全部完成！歌词及风格已保存到 {file_path}")
+            self.state = "ENDING"
+            return
+
+        print("\n正在修改风格建议...")
+        prompt = f"基于以下建议修改风格建议：\n建议：{suggestion}\n\n当前风格及理由：\n{styles_content}\n\n歌词参考：\n{lyrics}"
+        new_styles = self.call_ollama(prompt)
+        self.styles_index += 1
+        new_style_filename = f"tmp_song_styles_{self.styles_index:02d}.md"
+        with open(new_style_filename, 'w', encoding='utf-8') as f:
+            f.write(new_styles)
+
     def handle_ending(self):
+        print("\n" + "="*20)
+        print(" [阶段: 任务结束] ")
+        print("="*20)
         choice = self.handle_input("\n是否创作新歌曲? (yes/no): ")
         if choice == "/new": return
         
@@ -382,6 +485,7 @@ class LyricAgent:
             self.clear_tmp_files()
             self.description_index = 0
             self.lyrics_index = 0
+            self.styles_index = 0
             self.state = "INIT"
         elif choice.lower() == 'no':
             print("再见！")
