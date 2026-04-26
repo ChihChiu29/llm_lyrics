@@ -23,24 +23,33 @@ class LyricAgent:
         print("提示: 随时输入 /help 查看可用命令")
         self.resume_workflow()
         
-        while True:
-            if self.state == "INIT":
-                self.handle_init()
-            elif self.state == "SONG_DESCRIPTION":
-                self.handle_song_description()
-            elif self.state == "SONG_LYRICS":
-                self.handle_song_lyrics()
-            elif self.state == "SONG_STYLES":
-                self.handle_song_styles()
-            elif self.state == "ENDING":
-                self.handle_ending()
+        try:
+            while True:
+                if self.state == "INIT":
+                    self.handle_init()
+                elif self.state == "SONG_DESCRIPTION":
+                    self.handle_song_description()
+                elif self.state == "SONG_LYRICS":
+                    self.handle_song_lyrics()
+                elif self.state == "SONG_STYLES":
+                    self.handle_song_styles()
+                elif self.state == "ENDING":
+                    self.handle_ending()
+        except KeyboardInterrupt:
+            print("\n\n程序已由用户手动中断。")
+            sys.exit(0)
 
     def handle_input(self, prompt_text):
-        user_input = input(prompt_text).strip()
+        try:
+            user_input = input(prompt_text).strip()
+        except KeyboardInterrupt:
+            print("\n中断输入...")
+            return "/quit"
         
         if user_input.lower() == "/help":
             print("\n--- 可用命令 ---")
             print("/help          - 显示此帮助信息")
+            print("/model         - 切换当前使用的模型")
             print("/m, /multiline - 进入多行输入模式 (在独立一行输入 'END' 结束)")
             print("/new           - 开启全新创作 (清空当前进度)")
             print("/desc          - (歌词阶段可用) 返回修改歌曲描述")
@@ -49,14 +58,24 @@ class LyricAgent:
             print("----------------\n")
             return self.handle_input(prompt_text)
 
+        if user_input.lower() == "/model":
+            self.select_model()
+            with open("tmp_init.md", 'w', encoding='utf-8') as f:
+                f.write(f"Model: {self.model}\nStyle: {self.style}\n")
+            return self.handle_input(prompt_text)
+
         if user_input.lower() in ["/m", "/multiline"]:
             print("--- 进入多行模式 (在独立一行输入 'END' 以结束) ---")
             lines = []
-            while True:
-                line = input()
-                if line.strip().upper() == "END":
-                    break
-                lines.append(line)
+            try:
+                while True:
+                    line = input()
+                    if line.strip().upper() == "END":
+                        break
+                    lines.append(line)
+            except KeyboardInterrupt:
+                print("\n已取消多行输入。")
+                return ""
             return "\n".join(lines).strip()
 
         if user_input.lower() == "/quit":
@@ -102,6 +121,34 @@ class LyricAgent:
             print(f"获取模型列表失败: {e}")
             return []
 
+    def select_model(self):
+        models = self.get_ollama_models()
+        if not models:
+            print("未找到 Ollama 模型。请确保 Ollama 正在运行。")
+            return
+        
+        print("\n可用模型:")
+        for i, m in enumerate(models):
+            current_tag = " (当前)" if m == self.model else ""
+            print(f"{i+1}. {m}{current_tag}")
+        
+        try:
+            choice = input(f"\n请选择模型编号 (直接回车保持当前): ").strip()
+        except KeyboardInterrupt:
+            print("\n取消模型选择。")
+            return
+
+        if not choice:
+            if not self.model: self.model = models[0]
+            return
+
+        try:
+            self.model = models[int(choice)-1]
+            print(f"已切换模型为: {self.model}")
+        except:
+            if not self.model: self.model = models[0]
+            print("选择无效，保持原样。")
+
     def call_ollama(self, prompt, system_prompt="", stream=True, temperature=0.7):
         payload = {
             "model": self.model,
@@ -122,16 +169,43 @@ class LyricAgent:
                 return resp.json().get('message', {}).get('content', '')
 
             full_content = ""
-            for line in resp.iter_lines():
-                if line:
-                    chunk = json.loads(line)
-                    content = chunk.get('message', {}).get('content', '')
-                    full_content += content
-                    print(content, end='', flush=True)
-                    if chunk.get('done'):
-                        break
-            print() # New line after stream ends
+            current_is_reasoning = False
+            
+            try:
+                for line in resp.iter_lines():
+                    if line:
+                        chunk = json.loads(line)
+                        message = chunk.get('message', {})
+                        
+                        # 处理思考内容 (Reasoning / Thinking)
+                        reasoning = message.get('reasoning_content', '')
+                        if reasoning:
+                            if not current_is_reasoning:
+                                print("\n\033[90m[思考中...]\033[0m", end='', flush=True)
+                                current_is_reasoning = True
+                            print(f"\033[90m{reasoning}\033[0m", end='', flush=True)
+                            continue
+                        
+                        # 如果从思考切换到正式回复
+                        if current_is_reasoning:
+                            print("\n\033[32m[回复]:\033[0m ", end='', flush=True)
+                            current_is_reasoning = False
+                        
+                        content = message.get('content', '')
+                        full_content += content
+                        print(content, end='', flush=True)
+                        if chunk.get('done'):
+                            break
+            except KeyboardInterrupt:
+                print("\n\n[中断] 用户取消了当前生成。")
+                # 如果中断，返回已生成的内容（如果有），或者抛出异常让上层处理
+                return full_content if full_content else "User Interrupted"
+
+            print() # 结束换行
             return full_content
+        except requests.exceptions.RequestException as e:
+            if stream: print(f"\nAPI Error: {e}")
+            return f"Error: {e}"
         except Exception as e:
             if stream: print(f"\nError: {e}")
             return f"Error: {e}"
@@ -164,6 +238,12 @@ class LyricAgent:
 
     def resume_workflow(self):
         # Determine state by looking at tmp files
+        
+        # 先找歌词索引，因为后续阶段可能依赖它
+        lyrics_files = sorted(glob.glob("tmp_song_lyrics_*.md"), key=lambda x: int(re.search(r'(\d+)', x).group(1)))
+        if lyrics_files:
+            self.lyrics_index = int(re.search(r'(\d+)', lyrics_files[-1]).group(1))
+
         style_files = sorted(glob.glob("tmp_song_styles_*.md"), key=lambda x: int(re.search(r'(\d+)', x).group(1)))
         if style_files:
             self.styles_index = int(re.search(r'(\d+)', style_files[-1]).group(1))
@@ -175,9 +255,7 @@ class LyricAgent:
             print(f"已恢复到风格建议阶段 (版本 {self.styles_index})。")
             return
 
-        lyrics_files = sorted(glob.glob("tmp_song_lyrics_*.md"), key=lambda x: int(re.search(r'(\d+)', x).group(1)))
-        if lyrics_files:
-            self.lyrics_index = int(re.search(r'(\d+)', lyrics_files[-1]).group(1))
+        if lyrics_files: # 如果只有歌词没有风格，则恢复到歌词阶段
             self.state = "SONG_LYRICS"
             self.load_init()
             print(f"已恢复到歌词创作阶段 (版本 {self.lyrics_index})。")
@@ -218,21 +296,8 @@ class LyricAgent:
         print("\n" + "="*20)
         print(" [阶段: 初始设置] ")
         print("="*20)
-        models = self.get_ollama_models()
-        if not models:
-            print("未找到 Ollama 模型。请确保 Ollama 正在运行。")
-            sys.exit(1)
         
-        print("\n可用模型:")
-        for i, m in enumerate(models):
-            print(f"{i+1}. {m}")
-        
-        choice = self.handle_input(f"\n请选择模型编号 (默认 1): ")
-        if choice == "/new": return
-        try:
-            self.model = models[int(choice)-1] if choice else models[0]
-        except:
-            self.model = models[0]
+        self.select_model()
         
         # Style
         styles = []
@@ -394,6 +459,18 @@ class LyricAgent:
         with open(filename, 'r', encoding='utf-8') as f:
             lyrics = f.read()
 
+        system_prompt = (
+            "你是一位专业的 SUNO AI 风格提示词工程师。\n"
+            "你的任务是为歌词提供风格建议，必须严格遵守以下格式：\n"
+            "### [组名]\n"
+            "- [English Style Prompt]\n"
+            "  Reason: [简短的中文理由]\n\n"
+            "要求：\n"
+            "1. 必须包含三个组：Given, hiphop, any。\n"
+            "2. 每个风格提示词必须是纯英文，描述节奏、乐器、人声和氛围。\n"
+            "3. 不要输出任何多余的开场白或创作建议，只输出要求的风格组。"
+        )
+
         if self.styles_index == 0:
             print("\n正在生成 SUNO 风格建议 (包含理由)...")
             
@@ -403,20 +480,16 @@ class LyricAgent:
                     given_pool = f.read()
 
             prompt = (
-                f"基于以下歌词，为 SUNO AI 创作三组风格提示词 (English)，并为每组中的每个选择提供简短的理由 (Chinese)。\n\n"
-                f"歌词：\n{lyrics}\n\n"
-                f"要求：\n"
-                f"1. === Given ===: 从以下列表中挑选最适合的5个风格。\n{given_pool}\n\n"
-                f"2. === hiphop ===: 创作5个独特的 Hip-hop 风格提示词。\n"
-                f"3. === any ===: 创作5个任意流派的创意风格提示词。\n\n"
-                f"格式要求 (必须严格遵守):\n"
-                f"对于每组，按以下格式输出：\n"
-                f"### [组名]\n"
-                f"- Style Prompt (English)\n"
-                f"  Reason: [理由]\n"
-                f"(以此类推...)\n"
+                f"基于以下歌词，创作三组风格建议：\n\n歌词：\n{lyrics}\n\n"
+                f"1. === Given ===: 从中挑选最适合的5个：\n{given_pool}\n"
+                f"2. === hiphop ===: 创作5个独特 Hip-hop 风格。\n"
+                f"3. === any ===: 创作5个创意风格。"
             )
-            styles_content = self.call_ollama(prompt)
+            styles_content = self.call_ollama(prompt, system_prompt=system_prompt)
+            if not styles_content.strip() or "Error" in styles_content:
+                print("生成失败，请重试或检查模型状态。")
+                return
+
             self.styles_index = 1
             style_filename = f"tmp_song_styles_{self.styles_index:02d}.md"
             with open(style_filename, 'w', encoding='utf-8') as f:
@@ -433,24 +506,39 @@ class LyricAgent:
         suggestion = self.handle_input("\n请输入修改建议 (或输入 'ok' 批准, '/lyric' 返回歌词阶段): ")
         if suggestion == "/new": return
         if suggestion == "/lyric": return
+        if not suggestion: return
 
         if self.check_approval(suggestion):
             print("\n正在保存最终文件...")
-            # 解析内容，只保留 Prompt 用于文件
             final_content = f"{self.song_title}\n\n{lyrics}\n"
             
+            missing_groups = []
             for group in ["Given", "hiphop", "any"]:
-                final_content += f"\n=== {group} ===\n\n"
-                # 使用正则表达式提取每个 - 后面直到换行的内容
-                pattern = rf"### \[?{group}\]?\n(.*?)(?=###|$)"
+                pattern = rf"###\s*\[?{group}\]?\s*\n(.*?)(?=###|$)"
                 match = re.search(pattern, styles_content, re.DOTALL | re.IGNORECASE)
                 if match:
+                    final_content += f"\n=== {group} ===\n\n"
                     group_text = match.group(1)
-                    prompts = re.findall(r"^- (.*?)$", group_text, re.MULTILINE)
-                    for p in prompts[:5]:
-                        final_content += f"- {p.strip()}\n\n"
+                    # 提取所有以 - 开头的行
+                    lines = re.findall(r"^\s*-\s*(.*?)$", group_text, re.MULTILINE)
+                    count = 0
+                    for line in lines:
+                        clean_line = line.strip()
+                        # 移除常见的冗余前缀
+                        clean_line = re.sub(r'^Style Prompt\s*(\(English\))?:\s*', '', clean_line, flags=re.IGNORECASE)
+                        
+                        # 排除掉 Reason 行
+                        if not clean_line.lower().startswith("reason:"):
+                            final_content += f"- {clean_line}\n\n"
+                            count += 1
+                        if count >= 5: break
+                else:
+                    missing_groups.append(group)
 
-            # Sanitization
+            if missing_groups:
+                print(f"\n\033[33m[警告]: 模型输出中似乎缺少以下分组: {', '.join(missing_groups)}\033[0m")
+                print("最终保存的文件可能不完整，您可以尝试输入 '请补全所有分组'。")
+
             safe_title = re.sub(r'[\\/*?:"<>|\r\n\t]', "", self.song_title)
             if not safe_title: safe_title = f"song_{self.lyrics_index:02d}"
             safe_title = safe_title[:50]
@@ -467,8 +555,13 @@ class LyricAgent:
             return
 
         print("\n正在修改风格建议...")
-        prompt = f"基于以下建议修改风格建议：\n建议：{suggestion}\n\n当前风格及理由：\n{styles_content}\n\n歌词参考：\n{lyrics}"
-        new_styles = self.call_ollama(prompt)
+        prompt = (
+            f"基于用户的建议修改之前的风格建议。请务必保持原有的格式（三个分组，英提示词+中理由）。\n"
+            f"用户建议：{suggestion}\n\n"
+            f"当前歌词参考：\n{lyrics}\n\n"
+            f"当前风格建议内容：\n{styles_content}"
+        )
+        new_styles = self.call_ollama(prompt, system_prompt=system_prompt)
         self.styles_index += 1
         new_style_filename = f"tmp_song_styles_{self.styles_index:02d}.md"
         with open(new_style_filename, 'w', encoding='utf-8') as f:
