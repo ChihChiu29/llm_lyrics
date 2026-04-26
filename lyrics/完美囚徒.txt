@@ -1,0 +1,104 @@
+完美囚徒
+
+<Intro>
+(Synth Chord Swell / Trap Beat Drop)
+Spotlight, One, Two, Three
+City Glow，霓虹洒落这片不真实的平线
+今夜，我就是这个舞台唯一的 Scene
+
+<verse>
+深海霓虹勾勒着我完美的Silhouette，炫到让人几近无暇
+我用钻石闪烁的谎言，织出这场无解的Magic Drama
+红毯的尽头，每一步都遵循着无形的Formula，无法停下
+你捕捉的只是片刻的瞬间，却当它成了注定的Allegiance
+不，所有的目光，都已经被金色滤镜的欺骗覆盖
+我伫立在这高位，让我的背影成为质疑的焦点与战壁
+我走过每一盏闪光灯，像一座无暇的精美雕塑
+只让所有人都沉沦，只让所有人都追捧，直到忘记我的真实Message
+
+<hook>
+Yeah, 这光芒是一场精心设计的Show，华丽得令人几近窒息
+我像漂浮在虚空的Planet，越发耀眼，越遥远，越寂寞着思
+Baby，你只看见了顶峰的完美，没看到我淌下的代价
+在这巨大的聚光舞台上，我的灵魂被无限放大、被高挂
+我是个故事，美到极致，完美如禁锢的Trap，谁也挣脱不了
+在所有迷雾与烟火里，只有那孤独无法彻底超脱
+
+<verse>
+从初入这圈子，我学会完美的Show和伪装的弧度
+如何用一个无辜的眼神，抵抗所有审视和伤害的谋略部署
+他们说我的野心，像一颗超载的Supernova在爆炸地开场
+没人能理解，每个掌声背后都藏着冰冷的Rule和筹码重量
+我曾以为，热血能照亮这条漫长的Tunnel出口
+却发现，所有靠近的身影，都只是在旁观的虚幻烟幕
+Tell me，你爱的不是我，而是我完美搭建的Persona
+这套戏服太华丽，要将我真正的渴望彻底地遮蔽、压抑、难以触碰
+
+<pre-chorus>
+我的心跳声，早就被精准的节拍器量化和操控过
+所有的情绪波动，都必须依照既定的剧本，完美地被推演释放
+我需要这剧本，我需要这种极度的亢奋，和被聚焦的Tension
+像溺水的人，抓住了唯一的救命稻草，它最终不过一场幻象的欺骗
+
+<hook>
+Yeah, 这光芒是一场精心设计的Show，华丽得令人几近窒息
+我像漂浮在虚空的Planet，越发耀眼，越遥远，越寂寞着思
+Baby，你只看见了顶峰的完美，没看到我淌下的代价
+在这巨大的聚光舞台上，我的灵魂被无限放大、被高挂
+我是个故事，美到极致，完美如禁锢的Trap，谁也挣脱不了
+在所有迷雾与烟火里，只有那孤独无法彻底超脱
+
+<bridge>
+(Beat slowing down, more melodic, intense whisper)
+我不是传说的Prince，我只是一个被光环困住的囚徒
+每一次的姿态，都只是为了寻找一点真实的温度和出口
+I want to break the facade, I wanna shed this skin
+回到最初的底线，没人认识我的，那个疲惫的起点和真身
+Let me breathe, 我只想让所有的喧嚣声停止，听听我内心真实的晃荡和诉说
+I want to fall down, 抛弃这所有完美的面具和假装的骄傲
+
+<verse>
+所以，不必再看我用多么完美的笑容来维持伪装的度
+不必用目光去揣测，我心底深处那些无法言说的答案和图谋
+我站在世界的顶端，俯瞰着这人间浮躁与盛景的筹码和重量
+深知这场派对，不过又一个华丽的绝望边缘，一次盛大的迷惘
+这是我的宣言，我的宿命，我的无法被解开的Unique Code
+比起所谓的爱情，我更沉迷于这舞台上，只属于我的光芒和荣誉的Mode
+You see me? 我知道我是最闪耀的，所以更懂得如何收敛这份光芒的味道
+用剩下的全部生命力，去证明我的不完美，这本身就是一种极致的浪漫与骄傲
+
+=== Given ===
+
+- A modern Chinese melodic trap with emotional trap ballad energy, blending melancholic vocals and confessional rap, The mood is raw, vulnerable, slightly drunk, self-destructive, but passionately devoted, Atmosphere should feel like a late-night heartbreak monologue, soaked in neon lights, smoky room haze, and emotional tension, Use warm atmospheric pads, melodic trap drums, deep sub-bass, and soft, echoing synth leads, Vocals should sound fragile but intense, with a mix of melodic singing and soft rap delivery, The hook is catchy, soaring, and emotional, while the verses feel intimate, self-deprecating, honest, and slightly messy in a beautiful way
+
+- Trap, Chinese hip hop, energetic, boastful, dark, atmospheric, 808, hype, swag, club, swagger
+
+- Chinese emotional, rap, modern, melancholic, cinematic, sad, dramatic, emotional
+
+- Alternative hip-hop, reflective, introspective, atmospheric, lo-fi, underground, emotional, poetic, thoughtful, deep
+
+- Pop-rap, contemporary, polished, mainstream, bright, commercial, radio-friendly, upbeat, catchy, vibrant
+
+=== hiphop ===
+
+- Dark Trap R&B, 具有空灵混响（Reverb）和合成器铺底音的深沉男声演唱，节奏由沉稳的808低音和机械式的Hi-Hat驱动，营造出一种华丽、疏离且极度压抑的聚光灯下的孤独感。
+
+- Neo-Soul Trap Ballad, 采用厚重的模拟合成器（Analog Synth）和缓慢爆发的鼓点，人声需有精致的颤音（Vibrato）和叙事感，氛围是电影级的，充满迷雾和夜雨，强调“代价”和“虚无”的颓废美学。
+
+- Epic Orchestral Trap, 融合史诗级的交响乐元素（Strings, French Horns）与强烈的Trap节奏，人声需在高亢的副歌部分展现戏剧性的爆发力，整体氛围宏大、极度张力，像是在一座万众瞩目的竞技场进行的孤傲宣言。
+
+- Cyberpunk Drill, 节奏极度机械化和碎片化（Choppy Beat），鼓点棱角分明，人声处理需加入电子失真和自动调音效果（Auto-Tuned Vocals），模拟霓虹闪烁和电子迷宫的冰冷、快速、极度时尚的都市病态感。
+
+- Minimalist Lofi Hip-Hop, 节奏放缓，主体为低保真（Lo-Fi）采样和爵士吉他旋律，演唱需转为私密的、近乎耳语的自白式叙述，背景氛围应充满烟火气、疲惫感，强调“脱下伪装”后的脆弱与真实。
+
+=== any ===
+
+- Dark Electropop Stadium Anthem with Massive Synth Drop and Hyper-Saturated Reverb, Featuring soaring, dramatic vocal performance and pounding, pulsating beat shifts.
+
+- Atmospheric Trip-Hop R&B, characterized by smoky, echoing synths, deep 808 bass lines, and a melancholic, whispered vocal delivery, building to a dramatic, orchestral climax.
+
+- Cinematic Synthwave Ballad, utilizing lush, sweeping analog synthesizers, gated reverb drums, and a gradual emotional build-up, evoking the feeling of a late-night, empty neon-drenched city highway.
+
+- Modern Trap Pop with a Femme Fatale Edge, driven by crisp, rapid hi-hats, a minimal but aggressive bass pulse, and a confident, swaggering vocal flow, channeling a high-stakes, underground club atmosphere.
+
+- Orchestral Dark Pop Opera, incorporating dramatic cellos, soaring brass sections, and powerful, highly theatrical vocal arrangements, giving the sense of a grand, tragic stage performance under relentless spotlights.

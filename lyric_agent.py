@@ -18,6 +18,7 @@ class LyricAgent:
 
     def run(self):
         print("=== 中文说唱歌词创作助手 (v2) ===")
+        print("提示: 随时输入 /help 查看可用命令")
         self.resume_workflow()
         
         while True:
@@ -32,6 +33,27 @@ class LyricAgent:
 
     def handle_input(self, prompt_text):
         user_input = input(prompt_text).strip()
+        
+        if user_input.lower() == "/help":
+            print("\n--- 可用命令 ---")
+            print("/help          - 显示此帮助信息")
+            print("/m, /multiline - 进入多行输入模式 (在独立一行输入 'END' 结束)")
+            print("/new           - 开启全新创作 (清空当前进度)")
+            print("/desc          - (歌词阶段可用) 返回修改歌曲描述")
+            print("/quit          - 退出程序")
+            print("----------------\n")
+            return self.handle_input(prompt_text)
+
+        if user_input.lower() in ["/m", "/multiline"]:
+            print("--- 进入多行模式 (在独立一行输入 'END' 以结束) ---")
+            lines = []
+            while True:
+                line = input()
+                if line.strip().upper() == "END":
+                    break
+                lines.append(line)
+            return "\n".join(lines).strip()
+
         if user_input.lower() == "/quit":
             print("再见！")
             sys.exit(0)
@@ -103,11 +125,26 @@ class LyricAgent:
     def check_approval(self, user_input):
         approvals = ['ok', 'go', 'yes', 'y', 'fine', 'good', 'looks good', '好的', '可以', '行', '批准', '没问题', '成了', '就这', '过']
         normalized = user_input.lower().strip(" .!！。")
+        
+        # 1. Whitelist check
         if normalized in approvals:
             return True
         
-        # Quick LLM check for intent if not in list
-        check_prompt = f"判断用户是否对当前内容满意并想要继续到下一步。用户输入: '{user_input}'。如果是肯定（如'go', '可以', '好', '满意'等），仅回答'YES'，否则回答'NO'。"
+        # 2. Heuristic: if it's long and contains rejection keywords, it's definitely not approval
+        rejections = ['不行', '修改', '建议', '换', '重写', '但是', '可是', '不满意', '错', '差', '改', '不对']
+        if len(normalized) > 10:
+            if any(word in normalized for word in rejections):
+                return False
+
+        # 3. LLM check with a much stricter prompt
+        check_prompt = (
+            f"请判断用户的意图是 '批准并继续下一步' 还是 '提出修改建议'。\n"
+            f"用户输入: '{user_input}'\n\n"
+            f"要求：\n"
+            f"- 如果用户明确表示满意、批准、可以直接使用（如 'ok', '可以', '就这个'），且**没有任何**具体的修改意见，回答 'YES'。\n"
+            f"- 如果用户提出了任何修改要求、指出了错误、或者表达了不满意（如 '可是...', '修改...', '换掉...'），必须回答 'NO'。\n"
+            f"- 仅输出 'YES' 或 'NO'。"
+        )
         result = self.call_ollama(check_prompt, stream=False).strip().upper()
         return "YES" in result
 
@@ -291,12 +328,41 @@ class LyricAgent:
 
         if self.check_approval(suggestion):
             print("\n正在生成标题并保存...")
-            title_prompt = f"为以下歌词取一个简洁的标题：\n{lyrics}"
+            title_prompt = f"请为以下歌词取一个简洁的标题。注意：仅输出标题，不要任何多余的解释、标点或引言。如果可能，标题在10个字以内。\n歌词：\n{lyrics}"
             title = self.call_ollama(title_prompt, stream=False).strip().replace("\"", "").replace("'", "")
-            safe_title = re.sub(r'[\\/*?:"<>|]', "", title)
+            # 取第一行并清理非法字符，限制长度
+            title_first_line = title.split("\n")[0].strip()
+            safe_title = re.sub(r'[\\/*?:"<>|\r\n\t]', "", title_first_line)
+            if not safe_title:
+                safe_title = f"song_{self.lyrics_index:02d}"
+            safe_title = safe_title[:50] # 限制长度以防万一
+
+            # SUNO Style Prompt Generation
+            print("正在生成 SUNO 风格提示词...")
+            given_styles_content = ""
+            if os.path.exists("song_style_prompts.md"):
+                with open("song_style_prompts.md", 'r', encoding='utf-8') as f:
+                    all_given_styles = f.read()
+                
+                pick_prompt = f"从以下可选风格列表中，挑选出最适合这首歌词的5个风格。按匹配程度从高到低排序。仅输出这5个风格，每个风格一行，不要任何编号或解释。\n\n歌词：\n{lyrics}\n\n风格列表：\n{all_given_styles}"
+                picked = self.call_ollama(pick_prompt, stream=False).strip().split('\n')
+                given_styles_content = "\n=== Given ===\n\n" + "\n\n".join([f"- {s.strip().lstrip('- ')}" for s in picked if s.strip()][:5]) + "\n"
+
+            hiphop_prompt = f"基于以下歌词，创作5个最适合的 Hip-hop 风格提示词（适用于 SUNO）。要求：风格独特且具体，包含节奏、人声特征、氛围等描述。仅输出这5个风格，每个风格一行，不要任何编号或解释。\n\n歌词：\n{lyrics}"
+            hiphop_styles = self.call_ollama(hiphop_prompt, stream=False).strip().split('\n')
+            hiphop_content = "\n=== hiphop ===\n\n" + "\n\n".join([f"- {s.strip().lstrip('- ')}" for s in hiphop_styles if s.strip()][:5]) + "\n"
+
+            any_prompt = f"基于以下歌词，创作5个你认为最适合的任意音乐风格提示词（适用于 SUNO）。不限风格，可以是 Pop, Rock, Electronic 等。要求：描述详细且富有创意。仅输出这5个风格，每个风格一行，不要任何编号或解释。\n\n歌词：\n{lyrics}"
+            any_styles = self.call_ollama(any_prompt, stream=False).strip().split('\n')
+            any_content = "\n=== any ===\n\n" + "\n\n".join([f"- {s.strip().lstrip('- ')}" for s in any_styles if s.strip()][:5]) + "\n"
+            
             with open(f"{safe_title}.txt", 'w', encoding='utf-8') as f:
-                f.write(f"{title}\n\n{lyrics}")
-            print(f"歌词已保存到 {safe_title}.txt")
+                f.write(f"{title_first_line}\n\n{lyrics}\n")
+                f.write(given_styles_content)
+                f.write(hiphop_content)
+                f.write(any_content)
+
+            print(f"歌词及风格提示词已保存到 {safe_title}.txt")
             self.state = "ENDING"
             return
 
@@ -318,7 +384,8 @@ class LyricAgent:
             self.lyrics_index = 0
             self.state = "INIT"
         elif choice.lower() == 'no':
-            self.state = "SONG_LYRICS"
+            print("再见！")
+            sys.exit(0)
         else:
             print("请输入 'yes' 或 'no'。")
 
