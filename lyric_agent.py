@@ -1,24 +1,38 @@
 import os
 import re
 import sys
-import json
 import glob
+import datetime
 import requests
-
-OLLAMA_API_URL = "http://localhost:11434/api"
+import threading
+import time
+from prompt_toolkit import prompt
+from prompt_toolkit.formatted_text import ANSI
+from prompt_toolkit.key_binding import KeyBindings
+from agent_utils import Spinner, OllamaClient, handle_rich_input
 
 class LyricAgent:
     def __init__(self):
-        self.model = ""
+        self.ollama = OllamaClient()
         self.style = ""
         self.state = "INIT"
-        self.history = []
         self.description_index = 0
         self.lyrics_index = 0
+        self.s_version = 0
         self.song_title = ""
+        self.safe_title = ""
+        self.current_lyrics = ""
+        self.style_suggestions = ""
+        
+        # 预设颜色
+        self.C_CYAN = "\033[36m"
+        self.C_GRAY = "\033[90m"
+        self.C_YELLOW = "\033[33m"
+        self.C_GREEN = "\033[32m"
+        self.C_RESET = "\033[0m"
 
     def run(self):
-        print("=== 中文说唱歌词创作助手 (v2) ===")
+        print(f"{self.C_CYAN}=== 中文歌词创作助手 (Ultimate Edition) ==={self.C_RESET}")
         print("提示: 随时输入 /help 查看可用命令")
         self.resume_workflow()
         
@@ -30,69 +44,385 @@ class LyricAgent:
                     self.handle_song_description()
                 elif self.state == "SONG_LYRICS":
                     self.handle_song_lyrics()
+                elif self.state == "STYLE_DISCUSSION":
+                    self.handle_style_discussion()
                 elif self.state == "ENDING":
                     self.handle_ending()
         except KeyboardInterrupt:
-            print("\n\n程序已由用户手动中断。")
+            self.stop_spinner = True
+            print(f"\n\n{self.C_YELLOW}[中断]{self.C_RESET} 程序已安全退出。")
             sys.exit(0)
 
-    def handle_input(self, prompt_text):
-        try:
-            user_input = input(prompt_text).strip()
-        except KeyboardInterrupt:
-            print("\n中断输入...")
-            return "/quit"
-        
-        if user_input.lower() == "/help":
-            print("\n--- 可用命令 ---")
-            print("/help          - 显示此帮助信息")
-            print("/model         - 切换当前使用的模型")
-            print("/m, /multiline - 进入多行输入模式 (在独立一行输入 'END' 结束)")
-            print("/new           - 开启全新创作 (清空当前进度)")
-            print("/desc          - (歌词阶段可用) 返回修改歌曲描述")
-            print("/quit          - 退出程序")
-            print("----------------\n")
-            return self.handle_input(prompt_text)
+    def show_header(self, title):
+        print(f"\n{self.C_CYAN}{'='*40}\n [阶段: {title}] \n{'='*40}{self.C_RESET}")
 
-        if user_input.lower() == "/model":
-            self.select_model()
-            with open("tmp_init.md", 'w', encoding='utf-8') as f:
-                f.write(f"Model: {self.model}\nStyle: {self.style}\n")
-            return self.handle_input(prompt_text)
+    def show_help(self):
+        print(f"\n{self.C_CYAN}--- 创作助手: 指令手册 ---{self.C_RESET}")
+        print("  /help   - 显示此详细帮助")
+        print("  /model  - 切换 Ollama 模型")
+        print("  /new    - 开启新创作")
+        print("  /quit   - 退出程序")
+        print("\n  Enter: 提交内容 | Ctrl-J: 换行")
+        print("  vX: (如 v1) 回退歌词版本")
+        print("  svX: (如 sv1) 回退风格版本")
+        print("-" * 30 + "\n")
 
-        if user_input.lower() in ["/m", "/multiline"]:
-            print("--- 进入多行模式 (在独立一行输入 'END' 以结束) ---")
-            lines = []
-            try:
-                while True:
-                    line = input()
-                    if line.strip().upper() == "END":
-                        break
-                    lines.append(line)
-            except KeyboardInterrupt:
-                print("\n已取消多行输入。")
+    def handle_common_input(self, prompt_text, multiline=True):
+        while True:
+            user_input = handle_rich_input(prompt_text, multiline=multiline)
+            if user_input == "/quit":
+                sys.exit(0)
+            if not user_input:
                 return ""
-            return "\n".join(lines).strip()
+            first_line = user_input.split('\n')[0].lower().strip()
+            if first_line == "/help":
+                self.show_help()
+                continue
+            if first_line == "/model":
+                self.select_model()
+                if self.state != "INIT":
+                    self.save_init()
+                continue
+            if first_line == "/new":
+                return "/new"
+            return user_input
 
-        if user_input.lower() == "/quit":
-            print("再见！")
-            sys.exit(0)
-        elif user_input.lower() == "/new":
+    def select_model(self):
+        models = self.ollama.get_models()
+        if not models:
+            print(f"{self.C_YELLOW}无法连接 Ollama。{self.C_RESET}")
+            return
+        print(f"\n{self.C_GRAY}可用模型:{self.C_RESET}")
+        for i, m in enumerate(models):
+            tag = ""
+            if m == self.ollama.model:
+                tag = f"{self.C_CYAN}(当前){self.C_RESET}"
+            print(f"{i+1}. {m} {tag}")
+        
+        self.in_model_selection = True
+        choice = self.handle_common_input("\n选择模型编号 (回车当前): ", multiline=False)
+        self.in_model_selection = False
+        
+        if choice == "/new":
+            return
+        if not choice:
+            if not self.ollama.model:
+                if models:
+                    self.ollama.model = models[0]
+            return
+        try:
+            idx = int(choice) - 1
+            if 0 <= idx < len(models):
+                self.ollama.model = models[idx]
+                print(f"已切换至: {self.C_GREEN}{self.ollama.model}{self.C_RESET}")
+        except:
+            if not self.ollama.model:
+                if models:
+                    self.ollama.model = models[0]
+
+    def save_init(self):
+        with open("tmp_init.md", 'w', encoding='utf-8') as f:
+            f.write(f"Model: {self.ollama.model}\nStyle: {self.style}\nTitle: {self.song_title}\n")
+
+    def resume_workflow(self):
+        if os.path.exists("tmp_init.md"):
+            with open("tmp_init.md", 'r', encoding='utf-8') as f:
+                content = f.read()
+                m = re.search(r"Model: (.*)", content)
+                if m:
+                    self.ollama.model = m.group(1).strip()
+                s = re.search(r"Style: (.*)", content)
+                if s:
+                    self.style = s.group(1).strip()
+                t = re.search(r"Title: (.*)", content)
+                if t:
+                    self.song_title = t.group(1).strip()
+                    self.safe_title = re.sub(r'[\\/*?:"<>|]', "", self.song_title).replace(" ", "_")
+            
+            if self.ollama.model:
+                print(f"\n{self.C_CYAN}--- 恢复任务: {self.C_RESET}{self.style if not self.song_title else self.song_title}")
+                confirm = self.handle_common_input(f"是否继续使用模型 {self.ollama.model}? (y/n): ", multiline=False)
+                if confirm.lower() not in ['y', 'yes', '']:
+                    self.select_model()
+                    self.save_init()
+
+        style_files = sorted(glob.glob("tmp_song_styles_v*.txt"), key=lambda x: int(re.search(r'_v(\d+)', x).group(1)))
+        if style_files:
+            latest_style = style_files[-1]
+            self.s_version = int(re.search(r'_v(\d+)', latest_style).group(1))
+            with open(latest_style, 'r', encoding='utf-8') as f:
+                self.style_suggestions = f.read()
+            self.state = "STYLE_DISCUSSION"
+
+        lyrics_files = sorted(glob.glob("tmp_song_lyrics_*.md"), key=lambda x: int(re.search(r'(\d+)', x).group(1)))
+        if lyrics_files:
+            latest_lyrics = lyrics_files[-1]
+            self.lyrics_index = int(re.search(r'(\d+)', latest_lyrics).group(1))
+            with open(latest_lyrics, 'r', encoding='utf-8') as f:
+                self.current_lyrics = f.read()
+            if self.state != "STYLE_DISCUSSION":
+                self.state = "SONG_LYRICS"
+            print(f"{self.C_GREEN}已成功恢复!{self.C_RESET}")
+            return
+
+        if os.path.exists("tmp_song_approved.md"):
+            self.state = "SONG_LYRICS"
+            return
+
+        desc_files = sorted(glob.glob("tmp_song_description_*.md"), key=lambda x: int(re.search(r'(\d+)', x).group(1)))
+        if desc_files:
+            latest_desc = desc_files[-1]
+            self.description_index = int(re.search(r'(\d+)', latest_desc).group(1))
+            self.state = "SONG_DESCRIPTION"
+            return
+        
+        self.state = "INIT"
+
+    def handle_init(self):
+        self.show_header("初始设置")
+        self.select_model()
+        if not self.ollama.model:
+            sys.exit(1)
+        
+        styles = []
+        if os.path.exists("song_styles.md"):
+            with open("song_styles.md", 'r', encoding='utf-8') as f:
+                styles = [line.strip().lstrip("- ").strip() for line in f if line.strip().startswith("-")]
+        
+        if not styles:
+            print("找不到 song_styles.md")
+            sys.exit(1)
+            
+        print(f"\n{self.C_GRAY}可用风格:{self.C_RESET}")
+        for i, s in enumerate(styles):
+            print(f"{i+1}. {s}")
+        
+        choice = self.handle_common_input("\n选择风格编号或输入自定义 (回车默认1): ", multiline=False)
+        if choice == "/new":
+            return
+        if not choice:
+            self.style = styles[0]
+        else:
+            try:
+                idx = int(choice) - 1
+                if 0 <= idx < len(styles):
+                    self.style = styles[idx]
+                else:
+                    self.style = choice
+            except:
+                self.style = choice
+
+        self.save_init()
+        self.state = "SONG_DESCRIPTION"
+
+    def handle_song_description(self):
+        self.show_header("场景描述")
+        if self.description_index == 0:
+            prompt = f"为风格为 '{self.style}' 的中文歌曲创作独特背景。要有画面感。"
+            desc = self.ollama.call(prompt, temperature=1.3, spinner=Spinner("正在构思场景"))
+            if desc:
+                self.description_index = 1
+                with open(f"tmp_song_description_{self.description_index:02d}.md", 'w', encoding='utf-8') as f:
+                    f.write(desc)
+            else:
+                return
+        else:
+            with open(f"tmp_song_description_{self.description_index:02d}.md", 'r', encoding='utf-8') as f:
+                desc = f.read()
+
+        print(f"\n--- {self.C_CYAN}场景预览 (v{self.description_index:02d}){self.C_RESET} ---\n{desc}\n{'-'*20}")
+        suggestion = self.handle_common_input("\n建议 (ok 批准进入歌词, vX 回退, /c 讨论):")
+        if suggestion == "/new":
             self.clear_tmp_files()
             self.state = "INIT"
-            return "/new"
-        elif user_input.lower() == "/desc":
-            if self.state == "SONG_LYRICS":
-                if os.path.exists("tmp_song_approved.md"):
-                    with open("tmp_song_approved.md", 'r', encoding='utf-8') as f:
-                        print("\n--- 当前已批准的描述 (tmp_song_approved.md) ---")
-                        print(f.read())
-                        print("---------------------------------------")
-                self.state = "SONG_DESCRIPTION"
-                return "/desc"
+            return
+
+        back_match = re.search(r"back to v(\d+)", suggestion.lower()) or re.search(r"^v(\d+)$", suggestion.lower())
+        if back_match:
+            v = int(back_match.group(1))
+            back_file = f"tmp_song_description_{v:02d}.md"
+            if os.path.exists(back_file):
+                self.description_index = v
+                print(f"已回退 v{v:02d}")
+                return
+
+        intent, clean_input = self.ollama.check_intent(suggestion, self.style, "描述确认")
+        if intent == "APPROVE":
+            with open("tmp_song_approved.md", 'w', encoding='utf-8') as f:
+                f.write(desc)
+            self.state = "SONG_LYRICS"
+            self.lyrics_index = 0
+            return
+        elif intent == "CHAT":
+            self.ollama.call(f"讨论：'{clean_input}'\n内容：\n{desc}", system_prompt="你是顾问。只分析不输出完整内容。", spinner=Spinner())
+        elif intent == "MODIFY":
+            print(f"\n正在修改场景 (v{self.description_index:02d} -> v{self.description_index+1:02d})...")
+            new_desc = self.ollama.call(f"建议：'{clean_input}'\n当前：\n{desc}", spinner=Spinner())
+            if new_desc:
+                self.description_index += 1
+                with open(f"tmp_song_description_{self.description_index:02d}.md", 'w', encoding='utf-8') as f:
+                    f.write(new_desc)
+
+    def handle_song_lyrics(self):
+        self.show_header("歌词创作")
+        with open("tmp_song_approved.md", 'r', encoding='utf-8') as f:
+            approved_desc = f.read()
+        
+        if self.lyrics_index == 0:
+            prompt = f"根据场景创作歌词：\n{approved_desc}\n\n风格：{self.style}"
+            lyrics = self.ollama.call(prompt, spinner=Spinner("正在谱写歌词"))
+            if lyrics:
+                self.lyrics_index = 1
+                self.current_lyrics = lyrics
+                with open(f"tmp_song_lyrics_{self.lyrics_index:02d}.md", 'w', encoding='utf-8') as f:
+                    f.write(lyrics)
             else:
-                print("当前不在歌词创作阶段，无法返回描述阶段。")
-        return user_input
+                return
+        else:
+            with open(f"tmp_song_lyrics_{self.lyrics_index:02d}.md", 'r', encoding='utf-8') as f:
+                lyrics = f.read()
+                self.current_lyrics = lyrics
+
+        print(f"\n--- {self.C_CYAN}歌词预览 (v{self.lyrics_index:02d}){self.C_RESET} ---\n{lyrics}\n{'-'*20}")
+        suggestion = self.handle_common_input("\n建议 (ok 批准进入风格, vX 回退, /c 讨论):")
+        if suggestion == "/new":
+            self.clear_tmp_files()
+            self.state = "INIT"
+            return
+
+        back_match = re.search(r"back to v(\d+)", suggestion.lower()) or re.search(r"^v(\d+)$", suggestion.lower())
+        if back_match:
+            v = int(back_match.group(1))
+            back_file = f"tmp_song_lyrics_{v:02d}.md"
+            if os.path.exists(back_file):
+                self.lyrics_index = v
+                print(f"已回退 v{v:02d}")
+                return
+
+        intent, clean_input = self.ollama.check_intent(suggestion, self.style, "歌词确认")
+        if intent == "APPROVE":
+            title_p = f"为歌词取个简洁标题（10字内，仅标题）：\n{lyrics}"
+            self.song_title = self.ollama.call(title_p, stream=False, spinner=Spinner("正在命名")).strip().replace('"', '')
+            self.safe_title = re.sub(r'[\\/*?:"<>|\r\n\t]', "", self.song_title)[:40] or f"song_{self.lyrics_index}"
+            self.save_init()
+            self.state = "STYLE_DISCUSSION"
+            self.s_version = 0
+            return
+        elif intent == "CHAT":
+            self.ollama.call(f"讨论：'{clean_input}'\n内容：\n{lyrics}", system_prompt="你是顾问。不输出完整歌词。", spinner=Spinner())
+        elif intent == "MODIFY":
+            print(f"\n正在修改歌词 (v{self.lyrics_index:02d} -> v{self.lyrics_index+1:02d})...")
+            new_lyrics = self.ollama.call(f"建议：'{clean_input}'\n当前：\n{lyrics}", spinner=Spinner())
+            if new_lyrics:
+                self.lyrics_index += 1
+                self.current_lyrics = new_lyrics
+                with open(f"tmp_song_lyrics_{self.lyrics_index:02d}.md", 'w', encoding='utf-8') as f:
+                    f.write(new_lyrics)
+
+    def _strict_clean_styles(self, res):
+        """核心修复：物理剥离所有干扰字符"""
+        res = res.replace("**", "")
+        res = re.sub(r'\(.*?\)', '', res)
+        lines = res.split('\n')
+        cleaned = []
+        for line in lines:
+            s = line.strip()
+            if s.startswith("###") or s.startswith("-"):
+                cleaned.append(s)
+            elif re.match(r'^\d+\.', s):
+                cleaned.append("- " + re.sub(r'^\d+\.\s*', '', s))
+        return "\n".join(cleaned).strip()
+
+    def handle_style_discussion(self):
+        self.show_header("风格策划")
+        just_streamed = False
+        if self.s_version == 0:
+            print(f"\n正在策划风格提示词...")
+            given_pool = ""
+            if os.path.exists("song_style_prompts.md"):
+                with open("song_style_prompts.md", 'r', encoding='utf-8') as f:
+                    given_pool = f.read()
+            system_prompt = (
+                "STRICT_PROTOCOL: SUNO_DATA_EXPORT\n"
+                "TASK: OUTPUT_LISTS_ONLY\n"
+                "STRICT_RULES:\n"
+                "1. NO CHITCHAT. NO INTRODUCTION. NO REASONING.\n"
+                "2. NO PARENTHESES. NO BOLDING.\n"
+                "3. OUTPUT ONLY THREE HEADERS: ### Given, ### hiphop, ### any.\n"
+                "4. EACH ITEM MUST START WITH '- '.\n"
+                "5. EACH ITEM MUST BE 15-25 ENGLISH WORDS."
+            )
+            prompt = f"FILL_TEMPLATE:\nINPUT_LYRICS: {self.current_lyrics}\nPOOL: {given_pool}"
+            res = self.ollama.call(prompt, system_prompt=system_prompt, spinner=Spinner("正在策划风格"))
+            if res:
+                self.style_suggestions = self._strict_clean_styles(res)
+                self.s_version = 1
+                with open(f"tmp_song_styles_v{self.s_version:02d}.txt", 'w', encoding='utf-8') as f:
+                    f.write(self.style_suggestions)
+                just_streamed = True
+            else:
+                return
+
+        if not just_streamed:
+            print(f"\n--- {self.C_CYAN}风格建议 (sv{self.s_version:02d}){self.C_RESET} ---\n{self.style_suggestions}\n{'-'*20}")
+        suggestion = self.handle_common_input("\n建议 (ok 批准保存, svX 回退本阶段, vX 跳回歌词, /c 讨论):")
+        if suggestion == "/new":
+            self.clear_tmp_files()
+            self.state = "INIT"
+            return
+        
+        back_match_v = re.search(r"back to v(\d+)", suggestion.lower()) or re.search(r"^v(\d+)$", suggestion.lower())
+        if back_match_v:
+            v = int(back_match_v.group(1))
+            if v == 0:
+                v = 1
+            back_file = f"tmp_song_lyrics_{v:02d}.md"
+            if os.path.exists(back_file):
+                self.lyrics_index = v
+                self.state = "SONG_LYRICS"
+                with open(back_file, 'r', encoding='utf-8') as f:
+                    self.current_lyrics = f.read()
+                print(f"已跳回歌词 v{v:02d}")
+                return
+        
+        back_match_sv = re.search(r"back to sv(\d+)", suggestion.lower()) or re.search(r"^sv(\d+)$", suggestion.lower())
+        if back_match_sv:
+            v = int(back_match_sv.group(1))
+            back_file = f"tmp_song_styles_v{v:02d}.txt"
+            if os.path.exists(back_file):
+                self.s_version = v
+                with open(back_file, 'r', encoding='utf-8') as f:
+                    self.style_suggestions = f.read()
+                return
+
+        intent, clean_input = self.ollama.check_intent(suggestion, self.song_title, "风格策划")
+        if intent == "APPROVE":
+            save_path = os.path.join("lyrics", f"{self.safe_title}.txt")
+            now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            with open(save_path, 'w', encoding='utf-8') as f:
+                f.write(f"{self.song_title}\n\n{self.current_lyrics}\n\n=== Suggested Styles ===\n\n{self.style_suggestions}\n\n=== Metadata ===\nModel: {self.ollama.model}\nTime: {now}\n")
+            print(f"\n{self.C_GREEN}已保存到: {save_path}{self.C_RESET}")
+            self.clear_tmp_files()
+            self.state = "ENDING"
+            return
+        elif intent == "CHAT":
+            self.ollama.call(f"咨询：'{clean_input}'\n内容：\n{self.style_suggestions}", system_prompt="制作人身份。只对话，不输出列表。", spinner=Spinner())
+        elif intent == "MODIFY":
+            print(f"\n正在修改风格 (sv{self.s_version:02d} -> sv{self.s_version+1:02d})...")
+            res = self.ollama.call(f"建议：'{clean_input}'\n当前：\n{self.style_suggestions}", spinner=Spinner())
+            if res:
+                self.style_suggestions = self._strict_clean_styles(res)
+                self.s_version += 1
+                with open(f"tmp_song_styles_v{self.s_version:02d}.txt", 'w', encoding='utf-8') as f:
+                    f.write(self.style_suggestions)
+
+    def handle_ending(self):
+        choice = self.handle_common_input("\n是否创作新歌曲? (y/n):", multiline=False)
+        if choice.lower() in ['y', 'yes', '']:
+            self.state = "INIT"
+        else:
+            print("再见！")
+            sys.exit(0)
 
     def clear_tmp_files(self):
         for f in glob.glob("tmp_*"):
@@ -100,369 +430,10 @@ class LyricAgent:
                 os.remove(f)
             except:
                 pass
-
-    def get_ollama_models(self):
-        try:
-            resp = requests.get(f"{OLLAMA_API_URL}/tags")
-            resp.raise_for_status()
-            models = [m['name'] for m in resp.json().get('models', [])]
-            return models
-        except Exception as e:
-            print(f"获取模型列表失败: {e}")
-            return []
-
-    def select_model(self):
-        models = self.get_ollama_models()
-        if not models:
-            print("未找到 Ollama 模型。请确保 Ollama 正在运行。")
-            return
-        
-        print("\n可用模型:")
-        for i, m in enumerate(models):
-            current_tag = " (当前)" if m == self.model else ""
-            print(f"{i+1}. {m}{current_tag}")
-        
-        try:
-            choice = input(f"\n请选择模型编号 (直接回车保持当前): ").strip()
-        except KeyboardInterrupt:
-            print("\n取消模型选择。")
-            return
-
-        if not choice:
-            if not self.model: self.model = models[0]
-            return
-
-        try:
-            self.model = models[int(choice)-1]
-            print(f"已切换模型为: {self.model}")
-        except:
-            if not self.model: self.model = models[0]
-            print("选择无效，保持原样。")
-
-    def call_ollama(self, prompt, system_prompt="", stream=True, temperature=0.7):
-        payload = {
-            "model": self.model,
-            "messages": [
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": prompt}
-            ],
-            "stream": stream,
-            "options": {
-                "temperature": temperature
-            }
-        }
-        try:
-            resp = requests.post(f"{OLLAMA_API_URL}/chat", json=payload, stream=stream)
-            resp.raise_for_status()
-            
-            if not stream:
-                return resp.json().get('message', {}).get('content', '')
-
-            full_content = ""
-            current_is_reasoning = False
-            
-            try:
-                for line in resp.iter_lines():
-                    if line:
-                        chunk = json.loads(line)
-                        message = chunk.get('message', {})
-                        
-                        # 处理思考内容 (Reasoning / Thinking)
-                        reasoning = message.get('reasoning_content', '')
-                        if reasoning:
-                            if not current_is_reasoning:
-                                print("\n\033[90m[思考中...]\033[0m", end='', flush=True)
-                                current_is_reasoning = True
-                            print(f"\033[90m{reasoning}\033[0m", end='', flush=True)
-                            continue
-                        
-                        # 如果从思考切换到正式回复
-                        if current_is_reasoning:
-                            print("\n\033[32m[回复]:\033[0m ", end='', flush=True)
-                            current_is_reasoning = False
-                        
-                        content = message.get('content', '')
-                        full_content += content
-                        print(content, end='', flush=True)
-                        if chunk.get('done'):
-                            break
-            except KeyboardInterrupt:
-                print("\n\n[中断] 用户取消了当前生成。")
-                # 如果中断，返回已生成的内容（如果有），或者抛出异常让上层处理
-                return full_content if full_content else "User Interrupted"
-
-            print() # 结束换行
-            return full_content
-        except requests.exceptions.RequestException as e:
-            if stream: print(f"\nAPI Error: {e}")
-            return f"Error: {e}"
-        except Exception as e:
-            if stream: print(f"\nError: {e}")
-            return f"Error: {e}"
-
-    def check_approval(self, user_input):
-        normalized = user_input.lower().strip(" .!！。")
-        
-        # 1. 明确的批准白名单
-        approvals = ['ok', 'go', 'yes', 'y', 'fine', 'good', 'looks good', '好的', '可以', '行', '批准', '没问题', '成了', '就这', '过', '满意']
-        if normalized in approvals:
-            return True
-        
-        # 2. 明确的拒绝/修改关键词 (中英文)
-        rejections = [
-            '不行', '修改', '建议', '换', '重写', '但是', '可是', '不满意', '错', '差', '改', '不对', '再来', '重新', '补全',
-            'again', 'retry', 're-generate', 'redo', 'wrong', 'bad', 'change', 'modify', 'update', 'not good'
-        ]
-        if any(word in normalized for word in rejections):
-            return False
-
-        # 3. LLM 意图判断
-        check_prompt = (
-            f"请判断用户的意图是 '批准并继续' 还是 '要求修改/重试'。\n"
-            f"用户输入: '{user_input}'\n\n"
-            f"要求：\n"
-            f"- 如果用户明确表示满意、批准、可以直接使用（如 'ok', '可以', '成了'），回答 'YES'。\n"
-            f"- 如果用户要求 '重试'、'再来一次'、'换一批'、'修改某处' 或表达任何不满，必须回答 'NO'。\n"
-            f"- 仅仅输出 'YES' 或 'NO'，不要解释。"
-        )
-        result = self.call_ollama(check_prompt, stream=False, temperature=0).strip().upper()
-        # 严格检查，必须以 YES 开头且不包含 NO
-        return result.startswith("YES") and "NO" not in result
-
-    def resume_workflow(self):
-        # Determine state by looking at tmp files
-        
-        # 找歌词索引
-        lyrics_files = sorted(glob.glob("tmp_song_lyrics_*.md"), key=lambda x: int(re.search(r'(\d+)', x).group(1)))
-        if lyrics_files:
-            self.lyrics_index = int(re.search(r'(\d+)', lyrics_files[-1]).group(1))
-            self.state = "SONG_LYRICS"
-            self.load_init()
-            print(f"已恢复到歌词创作阶段 (版本 {self.lyrics_index})。")
-            return
-
-        if os.path.exists("tmp_song_approved.md"):
-            self.state = "SONG_LYRICS"
-            self.load_init()
-            print("已恢复到歌词创作阶段 (已批准描述)。")
-            return
-
-        desc_files = sorted(glob.glob("tmp_song_description_*.md"), key=lambda x: int(re.search(r'(\d+)', x).group(1)))
-        if desc_files:
-            self.description_index = int(re.search(r'(\d+)', desc_files[-1]).group(1))
-            self.state = "SONG_DESCRIPTION"
-            self.load_init()
-            print(f"已恢复到歌曲描述阶段 (版本 {self.description_index})。")
-            return
-
-        if os.path.exists("tmp_init.md"):
-            self.state = "SONG_DESCRIPTION"
-            self.load_init()
-            print("已恢复到歌曲描述阶段。")
-            return
-
-        self.state = "INIT"
-
-    def load_init(self):
-        if os.path.exists("tmp_init.md"):
-            with open("tmp_init.md", 'r', encoding='utf-8') as f:
-                content = f.read()
-                m = re.search(r"Model: (.*)", content)
-                if m: self.model = m.group(1).strip()
-                s = re.search(r"Style: (.*)", content)
-                if s: self.style = s.group(1).strip()
-
-    def handle_init(self):
-        print("\n" + "="*20)
-        print(" [阶段: 初始设置] ")
-        print("="*20)
-        
-        self.select_model()
-        
-        # Style
-        styles = []
-        if os.path.exists("song_styles.md"):
-            with open("song_styles.md", 'r', encoding='utf-8') as f:
-                styles = [line.strip().lstrip("- ").strip() for line in f if line.strip().startswith("-")]
-        
-        if not styles:
-            print("song_styles.md 中未找到风格。")
-            sys.exit(1)
-
-        print("\n可用风格:")
-        for i, s in enumerate(styles):
-            print(f"{i+1}. {s}")
-        
-        choice = self.handle_input(f"\n请选择风格编号或直接输入自定义风格 (默认 1): ")
-        if choice == "/new": return
-        
-        if not choice:
-            self.style = styles[0]
-        else:
-            try:
-                idx = int(choice)
-                if 1 <= idx <= len(styles):
-                    self.style = styles[idx-1]
-                else:
-                    self.style = choice
-            except ValueError:
-                self.style = choice
-
-        with open("tmp_init.md", 'w', encoding='utf-8') as f:
-            f.write(f"Model: {self.model}\nStyle: {self.style}\n")
-        
-        print(f"初始化完成。模型: {self.model}, 风格: {self.style}")
-        self.state = "SONG_DESCRIPTION"
-
-    def handle_song_description(self):
-        print("\n" + "="*20)
-        print(" [阶段: 歌曲描述] ")
-        print("="*20)
-        if self.description_index == 0:
-            print("\n正在生成歌曲描述/故事场景 (High Variance Mode)...")
-            prompt = (
-                f"请为一首风格为 '{self.style}' 的中文歌曲，创作一个独特的故事背景或视觉场景。\n"
-                f"要求：\n"
-                f"1. 极力增加差异化：每次生成的切入角度应完全不同。尝试在宏大叙事、微观细节、冷峻现实、抽象意境、生活琐事、虚构时空等不同维度间随机切换。\n"
-                f"2. 主题多样性：不要受限，可以涉及任何符合风格的主题。避免使用陈词滥调的意象。\n"
-                f"3. 灵感激发：描述应具有强烈的画面感或独特的情感基调，为后续歌词创作提供有趣的‘锚点’。"
-            )
-            desc = self.call_ollama(prompt, temperature=1.3)
-            self.description_index = 1
-            filename = f"tmp_song_description_{self.description_index:02d}.md"
-            with open(filename, 'w', encoding='utf-8') as f:
-                f.write(desc)
-        else:
-            filename = f"tmp_song_description_{self.description_index:02d}.md"
-            with open(filename, 'r', encoding='utf-8') as f:
-                desc = f.read()
-
-        print(f"\n--- 歌曲描述 (版本 {self.description_index:02d}) ---")
-        print(desc)
-        print("---------------------------------------")
-        
-        suggestion = self.handle_input("\n请输入修改建议 (或输入 'ok' 批准, 'let's go back to version x' 回退): ")
-        if suggestion == "/new": return
-        
-        if self.check_approval(suggestion):
-            with open("tmp_song_approved.md", 'w', encoding='utf-8') as f:
-                f.write(desc)
-            print("描述已批准。")
-            self.state = "SONG_LYRICS"
-            self.lyrics_index = 0
-            return
-
-        back_match = re.search(r"let's go back to version (\d+)", suggestion.lower())
-        if back_match:
-            v = int(back_match.group(1))
-            back_file = f"tmp_song_description_{v:02d}.md"
-            if os.path.exists(back_file):
-                self.description_index = v
-                print(f"已回退到版本 {v:02d}")
-                return
-            else:
-                print(f"版本 {v:02d} 不存在。")
-                return
-
-        print("\n正在修改描述...")
-        prompt = f"基于以下建议修改歌曲描述：\n建议：{suggestion}\n\n当前描述：\n{desc}"
-        new_desc = self.call_ollama(prompt)
-        self.description_index += 1
-        new_filename = f"tmp_song_description_{self.description_index:02d}.md"
-        with open(new_filename, 'w', encoding='utf-8') as f:
-            f.write(new_desc)
-
-    def handle_song_lyrics(self):
-        print("\n" + "="*20)
-        print(" [阶段: 歌词创作] ")
-        print("="*20)
-        approved_desc = ""
-        if os.path.exists("tmp_song_approved.md"):
-            with open("tmp_song_approved.md", 'r', encoding='utf-8') as f:
-                approved_desc = f.read()
-        else:
-            print("找不到已批准的描述，返回描述阶段。")
-            self.state = "SONG_DESCRIPTION"
-            return
-
-        instruction = ""
-        if os.path.exists("song_lyrics_instruction.md"):
-            with open("song_lyrics_instruction.md", 'r', encoding='utf-8') as f:
-                instruction = f.read()
-
-        if self.lyrics_index == 0:
-            print("\n正在生成歌词...")
-            prompt = f"根据以下描述创作歌词：\n{approved_desc}\n\n风格：{self.style}\n\n额外指令：\n{instruction}"
-            lyrics = self.call_ollama(prompt)
-            self.lyrics_index = 1
-            filename = f"tmp_song_lyrics_{self.lyrics_index:02d}.md"
-            with open(filename, 'w', encoding='utf-8') as f:
-                f.write(lyrics)
-        else:
-            filename = f"tmp_song_lyrics_{self.lyrics_index:02d}.md"
-            with open(filename, 'r', encoding='utf-8') as f:
-                lyrics = f.read()
-
-        print(f"\n--- 歌曲歌词 (版本 {self.lyrics_index:02d}) ---")
-        print(lyrics)
-        print("---------------------------------------")
-
-        suggestion = self.handle_input("\n请输入修改建议 (或输入 'ok' 批准): ")
-        if suggestion == "/new": return
-        if suggestion == "/desc": return
-
-        if self.check_approval(suggestion):
-            print("\n正在生成标题并保存...")
-            title_prompt = f"请为以下歌词取一个简洁的标题。注意：仅输出标题，不要任何多余的解释、标点或引言。如果可能，标题在10个字以内。\n歌词：\n{lyrics}"
-            title = self.call_ollama(title_prompt, stream=False).strip().replace("\"", "").replace("'", "")
-            self.song_title = title.split("\n")[0].strip()
-            
-            # Sanitization
-            safe_title = re.sub(r'[\\/*?:"<>|\r\n\t]', "", self.song_title)
-            if not safe_title: safe_title = f"song_{self.lyrics_index:02d}"
-            safe_title = safe_title[:50]
-
-            if not os.path.exists("lyrics"):
-                os.makedirs("lyrics")
-            
-            file_path = os.path.join("lyrics", f"{safe_title}.txt")
-            with open(file_path, 'w', encoding='utf-8') as f:
-                f.write(f"{self.song_title}\n\n{lyrics}")
-
-            print(f"全部完成！歌词已保存到 {file_path}")
-            self.state = "ENDING"
-            return
-
-        print("\n正在修改歌词...")
-        prompt = f"基于以下建议修改歌词：\n建议：{suggestion}\n\n当前歌词：\n{lyrics}\n\n风格参考：{self.style}\n额外指令：{instruction}"
-        new_lyrics = self.call_ollama(prompt)
-        self.lyrics_index += 1
-        new_filename = f"tmp_song_lyrics_{self.lyrics_index:02d}.md"
-        with open(new_filename, 'w', encoding='utf-8') as f:
-            f.write(new_lyrics)
-
-    def handle_ending(self):
-        print("\n" + "="*20)
-        print(" [阶段: 任务结束] ")
-        print("="*20)
-        choice = self.handle_input("\n是否创作新歌曲? (yes/no): ")
-        if choice == "/new": return
-        
-        if choice.lower() == 'yes':
-            self.clear_tmp_files()
-            self.description_index = 0
-            self.lyrics_index = 0
-            self.state = "INIT"
-        elif choice.lower() == 'no':
-            print("再见！")
-            sys.exit(0)
-        else:
-            print("请输入 'yes' 或 'no'。")
-
-if __name__ == "__main__":
-    agent = LyricAgent()
-    agent.run()
-
+        self.description_index = 0
+        self.lyrics_index = 0
+        self.s_version = 0
+        self.song_title = ""
 
 if __name__ == "__main__":
     agent = LyricAgent()

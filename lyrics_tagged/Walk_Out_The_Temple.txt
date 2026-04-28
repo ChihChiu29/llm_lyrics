@@ -1,0 +1,68 @@
+[Hip-Hop, Storytelling, Warning, Confident]
+Listen, to all my young soldiers and warriors out there
+When walk out the gate of this temple, always remember that
+Never leave your back to your enemy, because men's eyes must always look ahead
+Never show your weakness to your enemy so that you will become the strongest warrior
+Alright alright（好吧好吧）
+
+[Rap, Defiant, Bragging, Mockery]
+After Journey（艾福杰尼来了）
+Of course is me（当然是我）
+Fu-Qi Temple（《福气庙》也来了）
+哎，贷款就别给我打电话了现在
+Im recording right now （我忙着录音呢）
+I told you that（早就告诉过你）
+I dont need your money（我不需要你们的钱）
+Im perfect（我好着呢）
+
+[Conscious Hip-Hop, Aggressive, Socio-Political, Battle Rap]
+听说hip-hop有血栓 来让我一拳来攮通
+有人告诉我这游戏一帮缺的在掌控
+哪冒出的脏资本要我们来替你打工
+我把一切安顿好来和你们来碰一碰
+心灵指引着我让我不应该再有禁锢
+那些脏事儿脏心眼在我的心里都清楚
+但我看破不说破让我都刻在了头颅
+毕生的志向就是干翻你们我没留后路
+骗我一起 骗我加入 诱导骗我选边站
+一个二个人模狗样 让你看看谁更Man
+兄弟说庙要自己盖别被帝国大厦骗
+我从第一天就明白 开局他们就赔一万
+看到你公司也破产 人现在也住在Jail
+看看哪个MF重蹈覆辙没玩够
+表面都称兄道弟 那我们就奉陪到底
+
+[Flow, Determination, Self-Empowerment, Vocal Performance]
+让我们来送佛到西 把故事藏在韵脚里
+Now I build a temple, my mood现在适合战斗
+先开酒 All my amigos, 情歌先丢到最后
+无论我生或死 留一杯在我唱机前
+希望后人也同样有种为了自己爱而战斗
+Man I hope not so far，of course music in my blood
+肚子胀气的假仗义的Sorry我早上亿了
+不用再骗我 我永远不会选择躺平
+我将持续创造除非我往ICU里进，MF
+
+[Cinematic Rap, Martial Arts, Epic, Narrative Climax]
+武林中八大掌门人，相约每年聚会一次
+这一年七月中元
+八位掌门人抛弃门派之见，糅合各派武学精华
+研创出一套卓绝的拳法，名之为《福气八部》
+八位掌门离奇失踪，顿时江湖上掀起一阵龙争虎斗
+Okay
+
+=== Suggested Styles ===
+
+- Cinematic boom-bap beat with deep bass, motivational spoken word, and echoing orchestral samples, conveying a sense of timeless wisdom.
+
+- Aggressive, high-energy trap beat with distorted 808s, mocking ad-libs, and a cocky, boastful flow that exudes untouchable confidence.
+
+- Gritty, aggressive battle rap beat with frantic drums, dark jazz samples, and a confrontational, intellectual delivery tackling social injustice.
+
+- Soulful, cinematic hip-hop build-up. Features warm piano, soaring strings, and a determined, heartfelt vocal performance of personal growth.
+
+- Epic Wuxia score mixed with cinematic rap. Features sweeping traditional Chinese instruments and dramatic martial arts sound effects for a grand climax.
+
+=== Metadata ===
+Model: gemma4:e4b
+Saved At: 2026-04-27 22:20:07

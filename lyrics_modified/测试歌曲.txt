@@ -1,0 +1,6 @@
+第一行歌词
+第二行歌词
+
+=== Metadata ===
+Model: qwen3.6:27b
+Modified At: 2026-04-27 17:40:12
