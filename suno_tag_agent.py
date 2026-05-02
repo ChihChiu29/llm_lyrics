@@ -37,8 +37,11 @@ class SunoTagAgent:
 
     def _load_prompt(self, path, default):
         if os.path.exists(path):
-            with open(path, 'r', encoding='utf-8') as f:
-                return f.read().strip()
+            try:
+                with open(path, 'r', encoding='utf-8') as f:
+                    return f.read().strip()
+            except:
+                return default
         return default
 
     def run(self):
@@ -143,20 +146,21 @@ class SunoTagAgent:
 
     def resume_workflow(self):
         if os.path.exists("tmp_tag_init.md"):
-            with open("tmp_tag_init.md", 'r', encoding='utf-8') as f:
-                content = f.read()
-                m = re.search(r"Model: (.*)", content)
-                if m:
-                    self.ollama.model = m.group(1).strip()
-                t = re.search(r"Title: (.*)", content)
-                if t: 
-                    self.song_title = t.group(1).strip()
-                    self.safe_title = re.sub(r'[\\/*?:"<>|]', "", self.song_title).replace(" ", "_")
+            try:
+                with open("tmp_tag_init.md", 'r', encoding='utf-8') as f:
+                    content = f.read()
+                    m = re.search(r"Model: (.*)", content)
+                    if m: self.ollama.model = m.group(1).strip()
+                    t = re.search(r"Title: (.*)", content)
+                    if t: 
+                        self.song_title = t.group(1).strip()
+                        self.safe_title = re.sub(r'[\\/*?:"<>|]', "", self.song_title).replace(" ", "_")
+            except:
+                pass
             
             if self.ollama.model:
                 print(f"\n{self.C_CYAN}--- 待处理歌曲: {self.C_RESET}{self.song_title}")
-                prompt_txt = f"是否继续使用模型 {self.ollama.model}? (y/n): "
-                confirm = self.handle_common_input(prompt_txt, multiline=False)
+                confirm = self.handle_common_input(f"是否继续使用模型 {self.ollama.model}? (y/n): ", multiline=False)
                 if confirm.lower() not in ['y', 'yes', '']:
                     self.select_model()
                     self.save_init()
@@ -218,22 +222,18 @@ class SunoTagAgent:
 
         if found_file:
             print(f"\n{self.C_CYAN}--- 发现已有记录: {self.C_RESET}{os.path.basename(found_file)}")
-            confirm = self.handle_common_input("是否加载并重做? (y/n): ", multiline=False)
-            if confirm.lower() in ['y', 'yes', '']:
+            if self.handle_common_input("是否加载并重做? (y/n): ", multiline=False).lower() in ['y', 'yes', '']:
                 with open(found_file, 'r', encoding='utf-8') as f:
                     content = f.read()
                 parts = content.split("\n\n=== Suggested Styles ===\n\n")
                 self.tagged_lyrics = parts[0].strip()
                 if len(parts) > 1:
-                    self.style_suggestions = parts[1].strip()
+                    self.style_suggestions = parts[1].split("\n\n=== Metadata ===")[0].strip()
                 else:
                     self.style_suggestions = ""
                 self.lyrics_original = re.sub(r'^\[.*?\]\n?', '', self.tagged_lyrics, flags=re.MULTILINE)
                 self.version = 1
-                if self.style_suggestions:
-                    self.s_version = 1
-                else:
-                    self.s_version = 0
+                self.s_version = 1 if self.style_suggestions else 0
                 self.save_init()
                 with open(f"tmp_tag_{self.safe_title}_v00.txt", 'w', encoding='utf-8') as f:
                     f.write(f"{self.song_title}\n\n{self.lyrics_original}")
@@ -266,15 +266,10 @@ class SunoTagAgent:
 
     def handle_tagging(self):
         self.show_header("歌词标注建议")
-        system_prompt = (
-            "你是一位专业的 SUNO AI 音乐总监。你的任务是为歌词添加专业的 Meta Tags。\n\n"
-            "【禁止修改歌词】严禁修改任何原文。只能在段落正上方添加标注。\n"
-            "【格式要求】中括号 [] 内只能含英文。合并为一对 [] 并用逗号分隔。标注必须独立占行。"
-        )
         just_streamed = False
         if self.version == 0:
             full_text = f"{self.song_title}\n\n{self.lyrics_original}"
-            self.tagged_lyrics = self.ollama.call(full_text, system_prompt=system_prompt, spinner=Spinner())
+            self.tagged_lyrics = self.ollama.call(full_text, system_prompt=self.tagging_prompt, spinner=Spinner())
             if self.tagged_lyrics:
                 self.version = 1
                 with open(f"tmp_tag_{self.safe_title}_v01.txt", 'w', encoding='utf-8') as f:
@@ -288,7 +283,7 @@ class SunoTagAgent:
             print(self.tagged_lyrics)
             print(f"---{'-'*20}---")
             
-        suggestion = self.handle_common_input("\n标注建议 (ok 批准进入风格, vX 回退, /c 讨论):")
+        suggestion = self.handle_common_input("\n标注建议 (ok 批准并进入风格, vX 回退, /c 讨论):")
         if suggestion == "/new":
             self.clear_tmp_files()
             self.state = "INIT"
@@ -316,7 +311,7 @@ class SunoTagAgent:
                              system_prompt="你是制作人。直接回答建议，不输出方案，不重写歌词。", spinner=Spinner())
         elif intent == "MODIFY":
             print(f"\n正在修改 (v{self.version:02d} -> v{self.version+1:02d})...")
-            new_tagged = self.ollama.call(f"修改建议：'{clean_input}'\n当前：\n{self.tagged_lyrics}", system_prompt=system_prompt, spinner=Spinner())
+            new_tagged = self.ollama.call(f"修改建议：'{clean_input}'\n当前：\n{self.tagged_lyrics}", system_prompt=self.tagging_prompt, spinner=Spinner())
             if new_tagged:
                 self.tagged_lyrics = new_tagged
                 self.version += 1
@@ -325,10 +320,9 @@ class SunoTagAgent:
 
     def handle_style_discussion(self):
         self.show_header("风格提示词策划")
-        system_prompt = "资深风格策划师。策划 5 个详尽（15-25词）SUNO Style Prompts。加 '-' 开头，空行分隔。直接列表，不要解释。"
         just_streamed = False
         if self.s_version == 0:
-            self.style_suggestions = self.ollama.call(f"为歌词策划风格：\n\n{self.tagged_lyrics}", system_prompt=system_prompt, spinner=Spinner())
+            self.style_suggestions = self.ollama.call(f"为歌词策划风格：\n\n{self.tagged_lyrics}", system_prompt=self.style_prompt, spinner=Spinner())
             if self.style_suggestions:
                 self.s_version = 1
                 with open(f"tmp_tag_{self.safe_title}_styles_v01.txt", 'w', encoding='utf-8') as f:
@@ -378,7 +372,7 @@ class SunoTagAgent:
             self.ollama.call(f"咨询风格建议：'{clean_input}'\n内容：\n{self.style_suggestions}", system_prompt="你是风格策划师。直接回答用户，不输出方案，不输出列表。", spinner=Spinner())
         elif intent == "MODIFY":
             print(f"\n正在修改 (sv{self.s_version:02d} -> sv{self.s_version+1:02d})...")
-            new_styles = self.ollama.call(f"修改建议：'{clean_input}'\n当前：\n{self.style_suggestions}", system_prompt=system_prompt, spinner=Spinner())
+            new_styles = self.ollama.call(f"修改建议：'{clean_input}'\n当前：\n{self.style_suggestions}", system_prompt=self.style_prompt, spinner=Spinner())
             if new_styles:
                 self.style_suggestions = new_styles
                 self.s_version += 1
