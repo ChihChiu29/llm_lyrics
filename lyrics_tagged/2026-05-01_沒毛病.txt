@@ -1,0 +1,89 @@
+[Genre: Trap/Hip-Hop Anthem, Tempo: 140 BPM, Energy: High/Aggressive, Vocals: Confident Male Rapper, Instruments: Heavy 808 bass, distorted synth leads, fast hi-hat rolls, cinematic orchestral hits]
+得有样子 活的得有样子
+别太快Show hand make more ounce
+Get strong having fun nothing wrong
+人生就像 嗯 很快就Gone
+Let me hunt let me hunt let me hunt
+[Genre: Trap/Hip-Hop, Tempo: 135 BPM, Energy: Suspenseful/Warning, Vocals: Melodic Rap, Instruments: Dark, ominous synth pads, deep sub bass, vinyl scratching sound effect, subtle siren wails]
+圈子像丛林 容易受伤
+Let it bounce
+Let it bounce
+Let it bounce
+[Genre: Swagger Hip-Hop, Tempo: 145 BPM, Energy: Confident/Arrogant, Vocals: Sharp, rhythmic flow, Instruments: Crisp snare drum emphasis, punchy brass stabs, minimal, glossy synth backing]
+勾子跳累了还不停地晃
+Nothing wrong
+听说你哪个都想要
+冠军的戒指总冠军的帽子
+My pal 是我的跑不掉
+想要就要注意那些裁判的哨子
+投机取巧的崽儿
+U better run better run
+[Genre: Hardcore Rap/Braggadocio, Tempo: 140 BPM, Energy: Intense/Dominating, Vocals: Rapid-fire delivery, punctuated ad-libs, Instruments: Industrial beat, sharp metallic sound effects, booming kick drum, siren sound effect build-up]
+聪明的大脑来控制我的狂
+合理的场合就尽情释放
+太过专业的手法让对手失望
+U better run
+我故意释放情报
+原来很低调
+但你们越来越跳 My pal
+背后导嘴子狗腿子
+[Genre: Pop/Trap Transition, Tempo: 130 BPM, Energy: Dismissive/Smooth, Vocals: Cold, detached flow, Instruments: Clean electric piano chords, light trap drums, subtle echoing reverb, dramatic pause effect]
+歌那么难听
+通告还找我要
+I'm out
+Elevator in my house
+活蹦乱跳去拿我新家的钥匙
+I'm out
+[Genre: Confident Pop-Rap, Tempo: 128 BPM, Energy: Casual/Self-assured, Vocals: Smooth, conversational tone, Instruments: Jazzy Rhodes piano loop, tight drum machine beat, vinyl crackle effect, airy background vocal ad-libs]
+真的不爱showed off
+Call me coach journey
+战术很多不止打牛角儿
+Nothing wrong nothing wrong babe
+Nothing wrong nothing wrong babe
+Nothing wrong nothing wrong babe
+[Genre: Groove/R&B Fusion, Tempo: 115 BPM, Energy: Relaxed/Sultry, Vocals: Laid-back, rhythmic singing, Instruments: Warm analog synth bassline, soft finger snaps, lush background harmonies, subtle vinyl static]
+时间好几克拉真的不想waste
+地下 主流互相切换like switch
+从不主动挑衅乖乖坐我位置
+财务已经自由剩下show u how I play
+那点小钱就别在我的面前炫
+[Genre: Cinematic Hip-Hop, Tempo: 135 BPM, Energy: Confrontational/Flexing, Vocals: Measured, impactful delivery, Instruments: Deep cinematic string section swell, massive sub-bass drop, ticking clock sound effect, heavy reverb]
+如果要比哈搜走在你前面
+我只听歌 别丢人显眼
+给我点头哈腰
+当我出现在你面前
+[Genre: Build-up/Pre-Chorus, Tempo: 130 BPM, Energy: Rising tension, Vocals: Chant-like, powerful ad-libs, Instruments: Sweeping riser synth, escalating snare rolls, sudden silence followed by a powerful kick drum]
+Remember
+Nothing wrong nothing wrong babe
+Nothing wrong nothing wrong babe
+Nothing wrong nothing wrong babe
+[Genre: Melodic Trap Anthem, Tempo: 140 BPM, Energy: Empowering/Epic, Vocals: High-pitched ad-libs, anthemic chorus feel, Instruments: Full orchestral sound, powerful layered vocals, booming sub-bass drops, echoing synth chords]
+现实多不如意网上就多丧
+惹谁都可以但别惹我头上
+光过脚的孩子知道
+这条路有多脏
+[Genre: Gritty Street Rap, Tempo: 130 BPM, Energy: Intense/Raw, Vocals: Gravelly, storytelling rap, Instruments: Lo-fi drum beat, distorted guitar samples, smoky brass section, dramatic filter sweep effect]
+又上了几个电视
+我的歌他们都会唱
+三年来也算长了一点点见识
+走在街上还是特别高的辨识
+[Genre: Victory Rap, Tempo: 145 BPM, Energy: Triumphant/Overlord, Vocals: Commanding, clear articulation, Instruments: Bright, triumphant brass fanfare, massive cinematic percussion hits, sparkling synth arpeggios]
+在大牌的明星都得给我面子
+因为剔了头
+那些人就抓不住我的辫子
+
+=== Suggested Styles ===
+
+- Aggressive Trap, 140 BPM. Confident male rapper with shouted ad-libs. Features booming 808 bass, distorted synth leads, rapid hi-hat rolls, and sudden cinematic orchestral swells.
+
+- Dark Trap, 135 BPM. Melodic rap vocals over deep, ominous synth pads and sub bass. Incorporates dramatic vinyl scratching effects and subtle, escalating siren wails.
+
+- Swagger Hip-Hop, 145 BPM. Sharp, rhythmic flow with an arrogant tone. Driven by crisp snare drum emphasis, punchy brass stabs, and minimal, glossy synth backing with tight percussion.
+
+- Sultry R&B Fusion, 115 BPM. Laid-back, rhythmic singing with warm analog synth basslines. Features soft finger snaps, lush background harmonies, and subtle vinyl static crackle.
+
+- Cinematic Hip-Hop, 135 BPM. Measured, impactful delivery with heavy reverb. Accompanied by sweeping deep cinematic string sections, massive sub-bass drops, and constant ticking clock sound effects.
+
+=== Metadata ===
+Model: gemma4:e4b
+Saved At: 2026-05-01 20:35:50

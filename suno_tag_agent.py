@@ -380,12 +380,23 @@ class SunoTagAgent:
                     f.write(self.style_suggestions)
 
     def handle_ending(self):
-        confirm = self.handle_input("\n是否继续处理其他歌曲? (y/n):", multiline=False)
+        confirm = self.handle_common_input("\n是否继续处理其他歌曲? (y/n):", multiline=False)
         if confirm.lower() in ['y', 'yes']:
             self.state = "INIT"
         else:
             print("再见！")
             sys.exit(0)
+
+    def clear_tmp_files(self):
+        for f in glob.glob("tmp_tag_*"):
+            try:
+                os.remove(f)
+            except:
+                pass
+        self.song_title = ""
+        self.safe_title = ""
+        self.version = 0
+        self.s_version = 0
 
 if __name__ == "__main__":
     agent = SunoTagAgent()

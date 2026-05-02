@@ -1,0 +1,90 @@
+Pain
+
+[Genre: Hip-Hop/Trap, Energy: High Anxiety, Vocals: Spoken Word/Rapped, Instrumentation: Fast ticking clock sound effect, deep bass synth, minor key piano loop]
+谁来告诉我要怎么做
+才能够在10点半准时入眠
+我精神高度紧张秒针
+每一次跳动都感觉度日如年
+
+[Genre: Cinematic Hip-Hop, Energy: Aggressive/Determined, Vocals: Strong Baritone Rap, Instrumentation: Epic orchestral drums, scratch vinyl sound, subtle water ripple sound effect, heavy 808 bass]
+每当混乱再次出现
+请你像个warrior和敌人周旋
+重量级拳王不只拥有力量
+时刻记得 be water my friend
+
+[Genre: Conscious Rap, Energy: Confrontational, Vocals: Rapid fire flow, aggressive tone, Instrumentation: Sharp snare hits, glitch synth, boom bap drums, sample of mocking laughter sound effect]
+不啃气不代表我是哑巴
+只是隐藏自己卧底太长时间
+原来这么多二把刀
+用hiphop贴标签
+就能 轻松 骗钱
+
+[Genre: Trap/Braggadocio Hip-Hop, Energy: Confident/Arrogant, Vocals: Smooth, charismatic rap, Instrumentation: Ad-libs, shimmering hi-hats, plucked synth melody, dramatic record scratch transition]
+没想到有天别人也叫我OG
+想问谁给你给的授权
+格莱美金曲奖Billboard都还没拿
+这个头我真不好意思点
+
+[Genre: Melodic Rap/R&B, Energy: Reflective/Somber, Vocals: Emotional, breathy delivery, Instrumentation: Reverb-drenched piano chords, faint strings, vinyl crackle, slow tempo beat]
+我梦见所有人都出现有你有我
+面无表情丧失斗志集体沉默
+像个孩子无助委屈潸然泪下
+也许是梦也许留给我的困惑
+
+[Genre: Hip-Hop Anthem/Bridge, Energy: Rising determination, Vocals: Group chant/Layered vocals, Instrumentation: Cinematic drum roll building, brass stabs, massive sub-bass drop, echoing reverb]
+I stay I fight
+I we know we broke
+That date will comes
+I trust I hope
+The night so cold
+Come close 等候
+We stay we fight
+坚持 忍受
+Be honest
+Yourself
+No lie stay low
+尊重 对手
+人前 背后
+Humble humble
+低调 低调
+
+[Genre: Stadium Rap/Pop Crossover, Energy: Triumphant, Vocals: Powerful, layered chorus vocals, Instrumentation: Full orchestra swell, massive kick drums, triumphant synth arpeggios, crowd cheering sound effect]
+We climbed the mountain
+Our name on top
+We make hit songs
+And make history
+Calssic created
+Album mixtapes
+We make 1 million
+Paris new york
+The world is mine
+The world is yours
+
+[Genre: Trap/Festival Drop, Energy: Explosive, Vocals: Shout/Ad-libs, Instrumentation: Aggressive synth lead, rapid trap hi-hats, massive bass drop, sustained crowd noise, siren sound effect]
+尖叫 尖叫
+欢呼 欢呼
+We here
+We comes
+Watch out
+Watch out
+Follow your soul
+Follow your soul
+No fair no fair
+We young
+We young
+
+=== Suggested Styles ===
+
+- BPM 90, spoken word flow, deep resonant baritone. Features constant fast ticking clock sound effects, minor key piano loop, and heavy sub-bass synth drops, creating high anxiety and time pressure.
+
+- BPM 85, powerful baritone rap, aggressive tone. Accompanied by epic orchestral drums, deep 808 bass hits, subtle water ripple effects, and scratch vinyl textures, evoking a determined warrior's battle.
+
+- BPM 92, rapid fire flow, confrontational tone. Driven by sharp snare hits, glitch synth arpeggios, classic boom-bap drums, and an unsettling sample of mocking laughter, building intense, aggressive tension.
+
+- BPM 70, emotional, breathy vocal delivery. Features reverb-drenched piano chords, faint melancholic strings, gentle vinyl crackle, and a slow, atmospheric beat, creating a somber and deeply reflective mood.
+
+- BPM 140, powerful ad-libs and shouts. Featuring aggressive synth leads, hyper-fast trap hi-hat rolls, a massive bass drop, sustained crowd cheering, and a dramatic siren sound effect, achieving explosive festival energy.
+
+=== Metadata ===
+Model: gemma4:e4b
+Saved At: 2026-05-01 20:41:55

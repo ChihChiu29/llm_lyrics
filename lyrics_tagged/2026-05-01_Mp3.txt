@@ -1,0 +1,77 @@
+[Intro]
+[Upbeat tempo, synth-pop, catchy hook, light drum machine, 2000s electro-pop sound, playful male vocals, arpeggiated synth intro, quick sound effect of a cassette tape click]
+Mp3, mp3, mp3, just what I need
+我的mp3, mp3, mp3 藏在哪里
+
+[Verse 1]
+[Mid-tempo beat, nostalgic pop-rock, lo-fi guitar chords, slight reverb, intimate male vocals, sound effect of clicking buttons, vinyl scratch sound, steady kick drum]
+Back to the 2000s 夏天很热 却被frozen
+能想起的不多音符 用来捕捉回忆整个过程
+网上悄悄download 害怕格式化 一不留神
+穿戴整齐 将它放口进袋 歌名改好 小心翼翼出门
+
+[Verse 2]
+[Smooth R&B groove, warm bassline, subtle synth pad, whispering vocals, background chatter sound effect, gentle rhythm section, finger snap percussion]
+每当按下播放键 连眼神都会变得酷
+音量推过半 也吸引你过来 泡泡糖不停对我吐
+刻意坐在你left side 只因侧面轮廓诱人
+耳机右边给我 左边给你带 是一天最特别的moment
+
+[Chorus]
+[Uptempo build-up, powerful chorus, layered vocals (harmony), driving synth melody, punchy drums, emotional swell, epic pop arrangement, sweeping orchestral strings]
+Mp3, mp3 将我们连在一起
+Oh, mp3, mp3 每首歌都反复听
+
+[Verse 3]
+[Slightly mellowing tempo, acoustic guitar focus, reflective male vocal, gentle electric piano accompaniment, sound effect of bicycle bell ringing, yearning atmosphere, steady fingerpicking]
+我们不能离开太远 耳机还不是无线
+AAA battery, sixty-four memory 笨的还没学会充电
+这样骑车就能载你 有理由在你楼下出现
+喜欢这首歌就当面讲 没地方悄悄匿名为你留言
+
+[Verse 4]
+[Dreamy, cinematic pop, soft strings arrangement, breathy vocals, steady heartbeat sound effect, slow build-up, ethereal quality, subtle vocal ad-libs]
+每次播到情情爱爱 偷瞄看你面部表现
+只要带上它 就闭小嘴别讲话 这前奏只是个铺垫
+一首歌让我们升温 循环一首 一起入眠
+最后一起听的一首歌 就定格在彼此心中的日月
+
+[Chorus]
+[Grand and powerful, climax build, full band sound, soaring vocals, cinematic strings crescendo, driving beat with added urgency, ad-libs reaching a high note]
+Mp3, mp3 永远不想摘耳机
+我的mp3, mp3 都说好不分开听
+
+[Verse 5]
+[Tempo slows down, minor key shift, dramatic piano arpeggios, falsetto male vocal, unsettling atmosphere, sound of wind whistling, tension building, deep sub-bass rumble]
+为何爱情好像流沙 屋顶蜗牛慢慢爬
+付出了一切 得到你想得到的 却发现把你弄丢啦
+这是上帝某种公平 还是丢东西对我惩罚
+究竟谁偷了它 找回还有救吗 歌会不会就此蒸发
+
+[Verse 6]
+[Minimalist arrangement, sparse piano chords, raw and emotional vocal delivery, deep breath sound effect, quiet introspection, slight echo effect, only piano and voice]
+我把车停下 把眼睛擦了擦 陷入疯狂的回忆
+画面回到前一天 还记得有首歌我还没放进去
+不是花田错 也不是太美丽 可能自己想找自己
+自己问自己 是什么最可惜 是mp3 还是你
+
+[Outro]
+[Tempo slows drastically, fading out, solo piano and sustained synth pad, whispered vocals, sound of rain dripping, unresolved melancholy, gradual fade to silence]
+Mp3, mp3 你到底去了哪里
+临走前 我记得将它塞进你手心
+
+=== Suggested Styles ===
+
+- 130 BPM, bright electro-pop, playful male vocals, arpeggiated synth lead, snappy drum machine, filtered sound effects, and high-pitched synth stabs for a pure 2000s aesthetic.
+
+- 95 BPM, smooth neo-soul groove, warm baritone vocals, punchy electric bassline, finger snap percussion, subtle synth pad, and ambient background chatter for an intimate feel.
+
+- 110 BPM, massive pop build-up, soaring layered vocals, driving synth melody, punchy drums, sweeping cinematic strings, and a dramatic orchestral crescendo.
+
+- 85 BPM, mellow indie folk, reflective tenor vocals, gentle fingerpicked acoustic guitar, light electric piano accompaniment, subtle bicycle bell, and a yearning, warm reverb.
+
+- 70 BPM, dark cinematic pop, breathy falsetto vocals, deep sub-bass rumble, minor key piano arpeggios, unsettling wind effects, dramatic echo, and a slow, tense build-up.
+
+=== Metadata ===
+Model: gemma4:e4b
+Saved At: 2026-05-01 20:37:53

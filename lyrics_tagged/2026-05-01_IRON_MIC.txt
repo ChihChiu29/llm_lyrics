@@ -1,0 +1,65 @@
+IRON MIC
+
+[Structure: Build-up, Pre-Drop | Energy: High, Aggressive | Vocals: Fast-paced male rap, Ad-libs | Instrumentation: Heavy 808 bass, Siren synth, Crisp hi-hat rolls, Cinematic riser]
+Alright 都想要⾛起来
+So you know what I mean baby you know what I rap for
+Alright 随时可以上台
+独有的EQ 所以别碰我的我的我的
+
+[Structure: Hook, Drop | Energy: Peak, Anthem | Vocals: Layered male chorus, Powerful belt, Echo effects | Instrumentation: Massive sub-bass, Punchy kick drum, Brass stabs, Vinyl scratch sound effect]
+Iron mic, iron mic
+给我⼀个beat 就能让你⽿朵怀孕
+Iron mic, iron mic
+This is for ma team this is for ma family
+Iron mic, iron mic
+苦练技术 不如先有个life style
+Iron mic, iron mic
+我有义务 把本事变成财富
+
+[Structure: Verse, Narrative | Energy: Confident, Swagger | Vocals: Rhythmic flow, Deep tone, Quick articulation | Instrumentation: Jazzy sample loop, Boom-bap drums, Vinyl crackle, Subtle electric piano chords]
+⾸先我确定我的beat strong 不只是bass drum
+只有我只⽤调整微量 不⽤参考对象
+当然歌词也不⽤去诽谤 不⽤刻意对仗
+每个club 都有我们hit song like Chris Brown
+Work hard play hard 从不瞎蒙
+你还在T-R-A-P 但我们从⼩挖坑
+要知道hip hop风格的风不是刮风
+Shout out to ⾔敏还记得让rappers发声
+
+[Structure: Verse, Confrontational | Energy: Intense, Skeptical | Vocals: Measured, Dramatic speaking voice, Harmonies | Instrumentation: Dark cinematic strings, Sparse trap percussion, Filtered synth pad, Deep sub-bass rumble]
+崩塌或塌崩 这时代真的像
+脆弱的你们怎么可能记得hit 'em up
+歌词 都是编的 可能也编的真的棒
+但别忘了是谁能唱中⽂让Sways跟着晃
+
+[Structure: Build-up, Pre-Drop | Energy: Urgent, Tense | Vocals: Assertive male rap, Vocal ad-libs, Breath sounds | Instrumentation: Rising white noise sweep, Snare roll build-up, Off-beat rhythm, Industrial metallic sound]
+Alright 都想要⾛起来
+So you know what I mean now you know what I rap for
+Alright 随时可以上台
+独有的EQ 所以别碰我的我的我的
+
+[Structure: Climax, Outro Hook | Energy: Maximum, Euphoric | Vocals: Multi-layered shouting, Ad-libs, Vocal distortion | Instrumentation: Epic orchestral hit, Massive 808 slide, Crowd cheering sound effect, Full spectrum mastering]
+Iron mic, iron mic
+给我⼀个beat 就能让你⽿朵怀孕
+Iron mic, iron mic
+This is for ma team this is for ma family
+Iron mic, iron mic
+苦练技术 不如先有个life style
+Iron mic, iron mic
+我有义务 把本事变成财富
+
+=== Suggested Styles ===
+
+- 140 BPM, aggressive male rap, intense ad-libs. Heavy 808 bass, rising siren synth, crisp hi-hat rolls, cinematic riser sweep, building maximum tension and urgency.
+
+- 135 BPM, layered male chorus, powerful belted vocals, heavy echo effects. Massive sub-bass drop, punchy kick drum, aggressive brass stabs, loud vinyl scratches, anthemic stadium sound.
+
+- 90 BPM, soulful male rap, deep tone, quick articulation. Jazzy sample loop, classic boom-bap drums, vinyl crackle, subtle electric piano chords, creating a smooth, confident swagger groove.
+
+- 100 BPM, dramatic speaking voice, measured rap flow, harmonies. Dark cinematic strings, sparse trap percussion, filtered synth pad, deep sub-bass rumble, conveying intense, skeptical confrontation.
+
+- 150 BPM, multi-layered shouting, distorted ad-libs. Epic orchestral hit, massive 808 slide, loud crowd cheering, full spectrum mastering. Euphoric, maximalist, high-energy climactic finale.
+
+=== Metadata ===
+Model: gemma4:e4b
+Saved At: 2026-05-01 20:28:15
