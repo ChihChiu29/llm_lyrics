@@ -1,0 +1,98 @@
+[Pop, Upbeat, Flirty, Hook]
+姑娘你fire（你如此火热）
+You sexy（你如此性感）
+You fashion（你如此时髦）
+You fancy（你如此精致）
+让我
+忍不住地看你
+
+[R&B, Smooth, Vocal Focus, Build-up]
+姑娘你眼睛
+有魔力
+Im falling（让我坠入爱河）
+When they talking（当眼睛对我说话）
+骗我
+再次相信爱情
+
+[Hip-Hop Pop, Narrative, Confident, Mid-Tempo]
+紧张的我不敢动的像个蜡像
+自我怀疑你会不会把我加上
+你肌肤温度烫的确实有点夸张
+一点亲密举动热能就能把我擦伤
+无论开头多酷
+见到你都落幕
+几万块的上衣瞬间变成裹布
+朋友叫都听不到就像个聋子
+听说只有最辣的妹才能驾驭红色
+后悔没穿太帅
+有趣的人都内向
+周围变的安静
+我像中了头彩 要兑奖
+讲话就讲话 放什么电
+追你的方法 想了个遍
+接受我情敌挑战
+赖呱子们别捣乱
+你比明星还好看
+
+[Pop, Upbeat, Hook, Flirty]
+姑娘fire（你如此火热）
+You sexy（你如此性感）
+You fashion（你如此时髦）
+You fancy（你如此精致）
+让我
+你眼睛
+有魔力
+Im falling（让我坠入爱河）
+When they talking（当眼睛对我说话）
+骗我
+被你吊着团团转也心甘情愿
+每次都这样 我也不再新鲜
+
+[R&B, Smooth, Vocal Focus, Dynamic]
+等我想好回答 暗示不能带废话
+诚实的灵魂才能 对你开绿灯
+Before you say love you need a reason（说爱的时候也要带着爱的理由）
+再急的性子也需要Patient（耐心）
+
+[Pop, Upbeat, Hook, Climax]
+姑娘你fire（你如此火热）
+You sexy（你如此性感）
+You fashion（你如此时髦）
+You fancy（你如此精致）
+让我
+忍不住地看你
+姑娘你眼睛
+有魔力
+Im falling（让我坠入爱河）
+When they talking（当眼睛对我说话）
+骗我
+再一次
+
+[Pop, Upbeat, Hook, Anthem]
+姑娘你fire（你如此火热）
+You sexy（你如此性感）
+You fashion（你如此时髦）
+You fancy（你如此精致）
+让我
+你眼睛
+有魔力
+Im falling（让我坠入爱河）
+When they talking（当他们窃窃私语）
+骗我
+再次相信爱情
+
+=== Suggested Styles ===
+
+- Maximalist, epic electro-pop anthem. Sweeping, overwhelming synths driving a relentless pulse toward an inevitable, desperate, dramatic climax.
+
+- Deep, cinematic Neo-Soul R&B. Whispering vulnerability over dark, brooding synths, building towards a moment of devastating, existential emotional release.
+
+- Gritty, dramatic Hip-Hop for confrontation. Heavy, cinematic 808s and intense, spoken-word gravitas, detailing a life-altering, high-stakes struggle.
+
+- Monumental Pop Ballad built on betrayal. A haunting whisper-build exploding into a massive, desperate, operatic chorus of raw, cathartic anguish.
+
+- Dark, dramatic Synth-Pop crossover. Pulsating, arpeggiated synths reflecting a desperate, rain-soaked, neon-drenched pursuit through a dangerous cityscape.
+
+=== Metadata ===
+Model: gemma4:e4b
+Saved At: 2026-04-28 20:51:50

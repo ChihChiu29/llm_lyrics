@@ -1,0 +1,108 @@
+[Acoustic Pop, Male Vocal, Nostalgic, Reflective, Brotherhood, Chinese String]
+I will to sacrifice offer you best I have
+It worth my friend
+All the stuff we've been through let me explain
+The longer you keep the stronger the taste
+Few glass of good wine like good friendship like your and me
+Like the time goes fast enjoy your life
+
+[Pop Rock, Narrative, Chinese Language, Confrontational, Showmanship, Peking Opera Flair]
+从容的开场证明Our tour 又要开始
+有Loser跑掉I couldn't help
+I don't mean to but my numbers goes up nobody else
+就这样开始在你面前
+不要脸无包装对你开始炫耀
+还没来得及品尝
+就你说这瓶陈酿肯定变了味道
+存放的这段时间
+
+[Emotional Ballad, Chinese Language, Gratitude, Acceptance, Uplifting, Orchestra]
+或许有人耐心留下有人选择离开
+留下来的你拍着我的肩膀
+说我是你动力为我骄傲
+Thank you thank you thank you man
+Time for cry 无需在收敛
+Thank you thank you thank you man
+Journey makes u cry again
+Thank you thank you thank you man
+
+[Anthemic Pop, Build-up, Cinematic, Emotional Core, Epic, Full Orchestra]
+Hope you not the only one who understand
+I will to sacrifice offer you best I have
+It worth worth
+The longer you keep the stronger the taste
+Man you the man
+需要保护身边所有人的Big man
+低下头的狮子决定拼了命的Big man
+也曾灯红酒绿徘徊过的Big man
+
+[Pop Rock Ballad, Dramatic, Life Cycle, Struggle, Maturity, Chinese Folk Instruments]
+你开始感叹时间多么短暂
+家庭和社会中的角色你该如何转换
+Now u got kids to feed man
+幸福将疲惫冲淡
+成为Big man的Lil man and what's your plan
+
+[Introspective Pop, Chinese Language, Emotional Depth, Conflict, Self-Doubt, Minimalist Piano]
+试想过把自己丢进个空间
+那里没有太多人让我去讨厌
+此刻会议室唾液废话通篇
+就像当年餐桌前父母骂你早恋
+想早点脱身却被夹在中间
+身体里的星火在某处等待燎原
+
+[Empowerment Anthem, Pop Rock, Resolution, Self-Discovery, Defiance, Powerful Drums]
+Learn to say no
+迟早要交替新旧
+决定今后
+不再被别人眼光Control
+
+[Mid-Tempo Ballad, Chinese Language, Vulnerable, Reflective, Quest, Gentle Strings]
+我有些自我怀疑
+是否有些事情总忘
+你开始审视自己的Dream
+能否依旧滚烫
+总是处处怀疑
+如今开始相信手相
+
+[Cinematic Pop, Chinese Language, Thoughtful, Perspective, Journey, Sweeping Orchestration]
+是什么才能阻挡
+不让灵魂逐渐走样
+You been looking for
+信念的信条纹丝不动依然刺在手上
+换个角度思考不然结局必然够呛
+要不怎么对得起你在岸边独自守望
+
+[Dramatic Pop, Performance, Cinematic, Triumphant, Climax, Stage Lighting]
+我抬头看了看镜中的容颜
+整理衣角将从幕后走到人前
+将迎来人生第三次的冒险
+不问何日何年何月才是终点
+静止后的空隙传来了琴弦
+享受着掌声灯光定格舞台中间
+狮子低下的头是为能够
+让握紧的拳下次出击而蓄力等候
+
+[Climax Build-up, Pop Rock, Reflection, Chinese Language, Peak, Epic Chinese Opera]
+试想过把自己丢进个空间
+那里没有太多人让我去讨厌
+此刻会议室唾液废话通篇
+就像当年餐桌前父母骂你早恋
+想早点脱身却被夹在中间
+身体里的星火在某处等待燎原
+
+=== Suggested Styles ===
+
+- Acoustic male vocal, nostalgic Chinese string arrangements, reflective lyrics about enduring friendship and the passage of time.
+
+- Dramatic Pop Rock, incorporating Peking Opera flair, confrontational Chinese language lyrics, full of theatrical showmanship and swagger.
+
+- Cinematic Anthem, full orchestra build-up, epic Chinese opera style, culminating in a powerful, triumphant climax of self-realization.
+
+- Pop Rock Ballad, mature Chinese folk instruments, reflecting on the struggle of life cycles, family roles, and the journey to becoming a 'Big Man'.
+
+- Introspective Pop, starting with minimalist piano, building to a powerful Pop Rock anthem of self-discovery, defiance, and saying 'no'.
+
+=== Metadata ===
+Model: gemma4:e4b
+Saved At: 2026-05-01 18:21:04

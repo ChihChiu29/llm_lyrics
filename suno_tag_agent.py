@@ -3,6 +3,12 @@ import re
 import sys
 import glob
 import datetime
+import requests
+import threading
+import time
+from prompt_toolkit import prompt
+from prompt_toolkit.formatted_text import ANSI
+from prompt_toolkit.key_binding import KeyBindings
 from agent_utils import Spinner, OllamaClient, handle_rich_input
 
 class SunoTagAgent:
@@ -16,17 +22,32 @@ class SunoTagAgent:
         self.style_suggestions = ""
         self.version = 0
         self.s_version = 0
+        self.in_model_selection = False
+        self.stop_spinner = False
         
-        # 预设颜色
+        # 提示词模板加载
+        self.tagging_prompt = self._load_prompt("prompts/tagging_system.md", "你是一位专业的 SUNO AI 音乐总监。为歌词添加专业的 Meta Tags。严禁修改歌词文字。")
+        self.style_prompt = self._load_prompt("prompts/style_system.md", "你是一位资深风格策划师。为歌词策划 5 个详尽的 SUNO Style Prompts。")
+
         self.C_CYAN = "\033[36m"
         self.C_GRAY = "\033[90m"
         self.C_YELLOW = "\033[33m"
         self.C_GREEN = "\033[32m"
         self.C_RESET = "\033[0m"
 
+    def _load_prompt(self, path, default):
+        if os.path.exists(path):
+            with open(path, 'r', encoding='utf-8') as f:
+                return f.read().strip()
+        return default
+
     def run(self):
         print(f"{self.C_CYAN}=== SUNO 歌词标注助手 (Ultimate Edition) ==={self.C_RESET}")
         print("提示: 随时输入 /help 查看可用命令")
+        
+        if not os.path.exists("lyrics_tagged"):
+            os.makedirs("lyrics_tagged")
+            
         self.resume_workflow()
         
         try:
@@ -44,11 +65,14 @@ class SunoTagAgent:
                 elif self.state == "ENDING":
                     self.handle_ending()
         except KeyboardInterrupt:
+            self.stop_spinner = True
             print(f"\n\n{self.C_YELLOW}[中断]{self.C_RESET} 程序已安全退出。")
             sys.exit(0)
 
     def show_header(self, title):
-        print(f"\n{self.C_CYAN}{'='*40}\n [阶段: {title}] \n{'='*40}{self.C_RESET}")
+        print(f"\n{self.C_CYAN}{'='*40}")
+        print(f" [阶段: {title}] ")
+        print(f"{'='*40}{self.C_RESET}")
 
     def show_help(self):
         print(f"\n{self.C_CYAN}--- SUNO 标注助手: 指令手册 ---{self.C_RESET}")
@@ -57,7 +81,7 @@ class SunoTagAgent:
         print("  /new    - 开启新任务")
         print("  /quit   - 立即退出程序")
         print("\n  Enter: 提交内容 | Ctrl-J: 换行")
-        print("  vX (标注版本), svX (风格版本): 回退到特定版本")
+        print("  vX (标注版本), svX (风格版本): 回退版本")
         print("-" * 30 + "\n")
 
     def handle_common_input(self, prompt_text, multiline=True):
@@ -87,17 +111,21 @@ class SunoTagAgent:
             return
         print(f"\n{self.C_GRAY}可用模型:{self.C_RESET}")
         for i, m in enumerate(models):
-            tag = f"{self.C_CYAN}(当前){self.C_RESET}" if m == self.ollama.model else ""
+            tag = ""
+            if m == self.ollama.model:
+                tag = f"{self.C_CYAN}(当前){self.C_RESET}"
             print(f"{i+1}. {m} {tag}")
         
         self.in_model_selection = True
         choice = self.handle_common_input("\n选择模型编号 (回车当前): ", multiline=False)
         self.in_model_selection = False
+        
         if choice == "/new":
             return
         if not choice:
             if not self.ollama.model:
-                self.ollama.model = models[0]
+                if models:
+                    self.ollama.model = models[0]
             return
         try:
             idx = int(choice) - 1
@@ -106,7 +134,8 @@ class SunoTagAgent:
                 print(f"已切换至: {self.C_GREEN}{self.ollama.model}{self.C_RESET}")
         except:
             if not self.ollama.model:
-                self.ollama.model = models[0]
+                if models:
+                    self.ollama.model = models[0]
 
     def save_init(self):
         with open("tmp_tag_init.md", 'w', encoding='utf-8') as f:
@@ -117,14 +146,17 @@ class SunoTagAgent:
             with open("tmp_tag_init.md", 'r', encoding='utf-8') as f:
                 content = f.read()
                 m = re.search(r"Model: (.*)", content)
-                self.ollama.model = m.group(1).strip() if m else ""
+                if m:
+                    self.ollama.model = m.group(1).strip()
                 t = re.search(r"Title: (.*)", content)
                 if t: 
                     self.song_title = t.group(1).strip()
                     self.safe_title = re.sub(r'[\\/*?:"<>|]', "", self.song_title).replace(" ", "_")
+            
             if self.ollama.model:
                 print(f"\n{self.C_CYAN}--- 待处理歌曲: {self.C_RESET}{self.song_title}")
-                confirm = self.handle_common_input(f"是否继续使用模型 {self.ollama.model}? (y/n): ", multiline=False)
+                prompt_txt = f"是否继续使用模型 {self.ollama.model}? (y/n): "
+                confirm = self.handle_common_input(prompt_txt, multiline=False)
                 if confirm.lower() not in ['y', 'yes', '']:
                     self.select_model()
                     self.save_init()
@@ -177,18 +209,31 @@ class SunoTagAgent:
         self.song_title = title
         self.safe_title = re.sub(r'[\\/*?:"<>|\r\n\t]', "", self.song_title).replace(" ", "_")[:40]
         
-        save_path = os.path.join("lyrics_tagged", f"{self.safe_title}.txt")
-        if os.path.exists(save_path):
-            print(f"\n{self.C_CYAN}--- 发现已有记录: {self.C_RESET}{self.song_title}")
-            if self.handle_common_input("是否加载并重做? (y/n): ", multiline=False).lower() in ['y', 'yes', '']:
-                with open(save_path, 'r', encoding='utf-8') as f:
+        found_file = None
+        for f in glob.glob("lyrics_tagged/*.txt"):
+            filename = os.path.basename(f)
+            if filename.endswith(f"_{self.safe_title}.txt"):
+                found_file = f
+                break
+
+        if found_file:
+            print(f"\n{self.C_CYAN}--- 发现已有记录: {self.C_RESET}{os.path.basename(found_file)}")
+            confirm = self.handle_common_input("是否加载并重做? (y/n): ", multiline=False)
+            if confirm.lower() in ['y', 'yes', '']:
+                with open(found_file, 'r', encoding='utf-8') as f:
                     content = f.read()
                 parts = content.split("\n\n=== Suggested Styles ===\n\n")
                 self.tagged_lyrics = parts[0].strip()
-                self.style_suggestions = parts[1].strip() if len(parts) > 1 else ""
+                if len(parts) > 1:
+                    self.style_suggestions = parts[1].strip()
+                else:
+                    self.style_suggestions = ""
                 self.lyrics_original = re.sub(r'^\[.*?\]\n?', '', self.tagged_lyrics, flags=re.MULTILINE)
                 self.version = 1
-                self.s_version = 1 if self.style_suggestions else 0
+                if self.style_suggestions:
+                    self.s_version = 1
+                else:
+                    self.s_version = 0
                 self.save_init()
                 with open(f"tmp_tag_{self.safe_title}_v00.txt", 'w', encoding='utf-8') as f:
                     f.write(f"{self.song_title}\n\n{self.lyrics_original}")
@@ -199,6 +244,7 @@ class SunoTagAgent:
                         f.write(self.style_suggestions)
                 self.state = "TAGGING"
                 return
+        
         self.save_init()
         self.state = "INPUT_LYRICS"
 
@@ -222,7 +268,8 @@ class SunoTagAgent:
         self.show_header("歌词标注建议")
         system_prompt = (
             "你是一位专业的 SUNO AI 音乐总监。你的任务是为歌词添加专业的 Meta Tags。\n\n"
-            "【核心禁令】严禁修改歌词文字。标注必须在段落正上方。合并为一对 [] 并用逗号分隔。"
+            "【禁止修改歌词】严禁修改任何原文。只能在段落正上方添加标注。\n"
+            "【格式要求】中括号 [] 内只能含英文。合并为一对 [] 并用逗号分隔。标注必须独立占行。"
         )
         just_streamed = False
         if self.version == 0:
@@ -235,13 +282,13 @@ class SunoTagAgent:
                 just_streamed = True
             else:
                 return
-
+        
         if not just_streamed:
             print(f"\n--- {self.C_CYAN}当前预览 (v{self.version:02d}){self.C_RESET} ---")
             print(self.tagged_lyrics)
             print(f"---{'-'*20}---")
-
-        suggestion = self.handle_common_input("\n标注建议 (ok 批准并进入风格, vX 回退, /c 仅讨论):")
+            
+        suggestion = self.handle_common_input("\n标注建议 (ok 批准进入风格, vX 回退, /c 讨论):")
         if suggestion == "/new":
             self.clear_tmp_files()
             self.state = "INIT"
@@ -294,13 +341,13 @@ class SunoTagAgent:
             print(f"\n--- {self.C_CYAN}当前风格 (sv{self.s_version:02d}){self.C_RESET} ---")
             print(self.style_suggestions)
             print(f"---{'-'*20}---")
-
-        suggestion = self.handle_common_input("\n风格建议 (ok 批准并保存, svX 回退, /c 仅讨论):")
+            
+        suggestion = self.handle_common_input("\n风格建议 (ok 批准并保存, svX 回退, /c 讨论):")
         if suggestion == "/new":
             self.clear_tmp_files()
             self.state = "INIT"
             return
-
+            
         back_match = re.search(r"back to sv(\d+)", suggestion.lower()) or re.search(r"^sv(\d+)$", suggestion.lower())
         if back_match:
             v = int(back_match.group(1))
@@ -314,18 +361,21 @@ class SunoTagAgent:
 
         intent, clean_input = self.ollama.check_intent(suggestion, self.song_title, "风格阶段")
         if intent == "APPROVE":
-            save_path = os.path.join("lyrics_tagged", f"{self.safe_title}.txt")
+            today = datetime.datetime.now().strftime("%Y-%m-%d")
+            save_path = os.path.join("lyrics_tagged", f"{today}_{self.safe_title}.txt")
+            for f in glob.glob(f"lyrics_tagged/*_{self.safe_title}.txt"):
+                try: os.remove(f)
+                except: pass
             now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             with open(save_path, 'w', encoding='utf-8') as f:
                 f.write(self.tagged_lyrics + "\n\n=== Suggested Styles ===\n\n" + self.style_suggestions + f"\n\n=== Metadata ===\nModel: {self.ollama.model}\nSaved At: {now}\n")
-            print(f"\n{self.C_GREEN}已保存到: {save_path}{self.C_RESET}")
+            print(f"\n{self.C_GREEN}已完成保存到: {save_path}{self.C_RESET}")
             self.clear_tmp_files()
             self.state = "ENDING"
             return
         elif intent == "CHAT":
             print(f"\n{self.C_CYAN}[策划师见解]:{self.C_RESET}")
-            self.ollama.call(f"咨询风格建议：'{clean_input}'\n内容：\n{self.style_suggestions}", 
-                             system_prompt="你是风格策划师。直接回答用户，不输出方案，不输出列表。", spinner=Spinner())
+            self.ollama.call(f"咨询风格建议：'{clean_input}'\n内容：\n{self.style_suggestions}", system_prompt="你是风格策划师。直接回答用户，不输出方案，不输出列表。", spinner=Spinner())
         elif intent == "MODIFY":
             print(f"\n正在修改 (sv{self.s_version:02d} -> sv{self.s_version+1:02d})...")
             new_styles = self.ollama.call(f"修改建议：'{clean_input}'\n当前：\n{self.style_suggestions}", system_prompt=system_prompt, spinner=Spinner())
@@ -336,22 +386,12 @@ class SunoTagAgent:
                     f.write(self.style_suggestions)
 
     def handle_ending(self):
-        if self.handle_common_input("\n是否继续处理其他歌曲? (y/n):", multiline=False).lower() in ['y', 'yes', '']:
+        confirm = self.handle_input("\n是否继续处理其他歌曲? (y/n):", multiline=False)
+        if confirm.lower() in ['y', 'yes']:
             self.state = "INIT"
         else:
             print("再见！")
             sys.exit(0)
-
-    def clear_tmp_files(self):
-        for f in glob.glob("tmp_tag_*"):
-            try:
-                os.remove(f)
-            except:
-                pass
-        self.song_title = ""
-        self.safe_title = ""
-        self.version = 0
-        self.s_version = 0
 
 if __name__ == "__main__":
     agent = SunoTagAgent()

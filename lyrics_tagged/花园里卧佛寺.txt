@@ -1,0 +1,100 @@
+[Aggressive Rap, Boastful Flow, Cinematic Beat, Trap Influence]
+Time, which is so free（时间还很充裕）
+I gotta go back（当我回到赛场）
+Time's up won't stop（现在是时候了，你知道我不会停）
+Its our new day（现在是属于我们的时代）
+Studio是我创造奇迹般的艺术馆
+经典的经典像Biggie脚上穿的踢不烂
+胃口太大灵感永远溢不满
+内容丰富得像925上镶的密度感
+别用时间来试探我的功底
+山路不止十八个弯计算用的公里
+眼睛是好的毒药把每个面孔记住
+真真假假都不重要先把人设立住
+互联网是保护伞把幕后黑手庇护
+一群缺心眼的孩子把没道德当艺术
+我们能乘风 也能轻松破浪
+双脚离地腾空 多巴胺能过量
+不破坏门风 好日子给过上
+失败乃是成功 属于我的末将
+
+[Narrative Rap, Storytelling, Critical Tone, Fast Paced Rhythm]
+碗里还没吃饱就想跑到外面
+找到自己new life昙花再现
+时间对我来说不止是个概念
+再说皇上不急 急得永远只是太监
+不太真的新闻转发证明心有鬼
+恰烂钱的生涯 嗯 他们迟早亲手毁
+满世界的通告跑得日理万机
+不忘发个微博求个安慰自己蛋哔
+你粉丝只想骗跑 我粉丝想嫁给我
+你粉丝怕你被验尿糖高吃我大水果
+一句话让你多想我灵感多就乱挥霍
+破圈子命运共同体 犯啥哔要一起背锅
+看你脏辫颜色多的孔雀开屏求配偶
+烂歌别发了都喂狗 请少喝勾兑酒
+趁你还年轻 珠宝配饰都得带
+等你老了植发车子手表都得卖
+
+[Gritty Hip-Hop, Underground Vibe, Hardcore Punchlines, Boom Bap Beat]
+Sometime a little bit dirty（有时候也会有点脏）
+绅士又脏的挺得体
+当下的哲理通过设计还觉得挺合理
+屁道理没有 我就喜欢瞎给他说
+绕圈圈 不打表 摩的屁话多
+垃圾食品配渣女肯定早牺牲
+在舞台踢不烂腾空我们脚地蹬
+我懂你下面瘙痒所以送你脚气喷
+花园里卧佛寺他们叫我扫地僧
+Flow有苯佐卡因所以Verse够持久
+累不死胖子只怕瘦死狗
+看你们对Hip-Hop感觉拿捏又失手
+我专辑每次一百分你还不到六十九
+要钱不要命有钱没命花才悲剧
+情债仇家都没得我才算真得意
+上午英皇手表下午去趟亨德利
+白天王府井晚上带妞SKP
+在SKP我和小茹逛街遇到了杰尼
+他说Hip-Hop这学校现在没人好好学习
+我跟他说让子弹飞一会咱们先别急
+要不了多久滥竽充数都得歇了
+造型都挺花哨的 继续瞎闹吧
+海报拍的像婚纱照 油腔滑调的
+歌词基本都是胡说八道的
+看他装不如看阿宝上星光大道吧
+
+[Battle Rap, Technical Skill Showcase, Rapid Fire Delivery, Hard Hitting Rhymes]
+哥们
+I dont really care about你穿的什么大牌（我真不在乎）
+我写个Punchline你们都接不上个下联
+有人模仿Kendrick Lamar
+但我更想要超越老黑就像刘翔跨栏
+拿起键盘跟我比比划划
+如果我是珠穆拉玛 你在马里亚纳
+基本功都没练好你还废七八话
+送你一句我的家乡方言你个Ri-Ba-Chua哥们
+Ri-Ba-Chua是什么意思？
+我ABC是听不懂的。
+Tell me.
+Ehh, that means you are a piece of shyt.（意思是你啥也不是）
+有人假装是艺术家来掩盖脚臭
+也有人Rap like a 4S销售
+不管是Jackson Wang还是暴扣
+我能看穿一切叫我X教授
+（DJ-DASH Scratch）
+
+=== Suggested Styles ===
+
+- Cinematic Trap beat, massive 808 bass drops, aggressive male vocals, boasting about unstoppable success and era dominance.
+
+- Fast-paced narrative rap, cynical storytelling, boom-bap rhythm, critical social commentary, rapid-fire verbal takedowns.
+
+- Gritty underground hip-hop, raw boom-bap beat, old-school swagger, dirty punchlines, intensely confrontational energy.
+
+- High-octane battle rap, rapid-fire technical delivery, intense flow showcase, complex multi-syllabic rhyme schemes.
+
+- Melodic rap, introspective vibe, smooth piano chords, deep bassline, reflective male vocals for a late-night atmosphere.
+
+=== Metadata ===
+Model: gemma4:e4b
+Saved At: 2026-04-27 23:07:19

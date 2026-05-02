@@ -1,0 +1,89 @@
+[Epic, Cinematic, Chinese Folk, Ballad, Build-up]
+血色残阳孤霞
+寒锋映宿命断刃破尘沙
+红颜泪落月下
+唯情字无瑕
+
+[Epic Rock, Orchestral, High Male Vocal, Dramatic Build]
+傲骨承天云踏
+万界法则掌中沙
+我只手逆天法
+在轮回尽头妄语天涯
+天命由我来画
+
+[Wuxia, Metal, Orchestral Battle, Powerful Drums, High Energy]
+修罗道花影
+苍穹裂孤星
+笑世间万物皆为虚名
+御风破囚庭
+邪刃破天惊
+震一方穹顶
+
+[Chorus, Anthem, Epic Pop Rock, Powerful Vocals, Cinematic]
+我逆天道独行
+静待邪神觉醒
+万界风云宁
+星域崩乾坤倾搅云乱我来定
+
+[Bridge, Grand Scale, Chorus, Chinese Opera Elements, Full Orchestration]
+我逆天道而行
+踏碎轮回宿命
+天地听令
+
+[Climax, High Intensity, Ballad Rock, Chinese Melody, Grand Finale]
+我御龙吟凤鸣清
+红袖翩跹映诸天如你繁星万花凋零
+容我再刃染冰晶如镜
+偏执成狂赤焰焚天风破云庭
+天地听令
+
+[Outro, Epic, Repeat Chorus, Triumphant, Grand Scale]
+天命由我裁定
+
+[Outro, Epic, Repeat Chorus, Triumphant, Grand Scale]
+傲骨承天云踏
+万界法则掌中沙
+我只手逆天法
+在轮回尽头妄语天涯
+天命由我来画
+
+[Wuxia, Metal, Orchestral Battle, Powerful Drums, High Energy]
+修罗道花影
+苍穹裂孤星
+笑世间万物皆为虚名
+御风破囚庭
+邪刃破天惊
+震一方穹顶
+
+[Chorus, Anthem, Epic Pop Rock, Powerful Vocals, Cinematic]
+我逆天道独行
+静待邪神觉醒
+万界风云宁
+星域崩乾坤倾搅云乱我来定
+
+[Bridge, Grand Scale, Chorus, Chinese Opera Elements, Full Orchestration]
+我逆天道而行
+踏碎轮回宿命
+天地听令
+
+[Climax, High Intensity, Ballad Rock, Chinese Melody, Grand Finale]
+我御龙吟凤鸣清
+红袖翩跹映诸天如你繁星万花凋零
+容我再刃染冰晶如镜
+偏执成狂赤焰焚天风破云庭
+天地听令
+
+[Outro, Epic, Repeat Chorus, Triumphant, Grand Scale]
+天命由我裁定
+
+=== Suggested Styles ===
+
+- Epic Chinese Cinematic Ballad, featuring haunting folk melodies, sorrowful male vocals, and a sweeping, dramatic build-up of fate.
+- High-Octane Wuxia Metal Battle, with powerful orchestral drums, shredding electric guitar riffs, and a massive, aggressive energy.
+- Grand Chinese Opera Fusion, full orchestration, deep resonant male vocals, emphasizing the dramatic flair of shattering destiny.
+- Stadium Anthem Pop Rock, powerful soaring vocals, cinematic chorus structure, building to a triumphant, massive, and epic climax.
+- Triumphant Epic Grand Finale, blending Chinese imperial melodies, powerful rock instrumentation, and a soaring, majestic sense of resolution.
+
+=== Metadata ===
+Model: gemma4:e4b
+Saved At: 2026-04-29 21:43:11

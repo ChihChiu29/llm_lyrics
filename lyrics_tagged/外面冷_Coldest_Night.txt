@@ -1,0 +1,78 @@
+[Pop Ballad, Emotional, Dramatic, Female Vocal, Piano Intro]
+When I give you my broken heart in the coldest night please hold it tight（如果我在最冷的夜赠予你一颗支离破碎的心，请收好它）
+If you lie to me babe I just might let a falling dice decide my whole life（但倘若你欺骗了我，那我可能就会让余生随风飘摇）
+When I give you my broken heart in the coldest night please hold it tight（如果我在最冷的夜赠予你一颗支离破碎的心，请珍惜它）
+If you lie to me babe I just might let a falling dice decide my whole life（但倘若你欺骗了我，那我可能就会让余生随风飘摇）
+
+[R&B, Confessional, Mid-Tempo, Chinese Pop, Flowing Rhythm]
+如果要放弃就请一起放弃彻底
+理解有上亿种方法看是什么目的
+让我们肉体剥离去放肆也算保护你
+也说过怕我被骗当我们在一起沐浴
+抱怨声音太大盖过兑现
+本能的去顾虑不知道危险
+Girl你明明爱的就很明显
+谎言是善意还是你会演
+你说过太多时间维护野心从没考虑你
+日以继夜银行卡里只是那些破数据
+我们都是某种蝼蚁维护着某种默契
+也尽量不去过度关注你也习惯了过滤
+这束光若隐又若现而我又拖延又拖延
+感受到失去耐心的你慢慢对我的冷眼
+可每首歌都有你影子我亲手来设计
+Baby我最大野心是你其他没意义
+
+[Pop, Build-up, Synth, Reflective]
+Will I go easy will I go hard（我不知道到那时会轻松释然还是会难以割舍）
+I think we both should keep the best part（但我认为我们至少应该留下对彼此最好的回忆）
+如何被你吸引
+How we getting started（如何与你相爱）
+Love is so strong so strong（这份爱实在太浓烈）
+Will I go easy will I go hard（我不知道到那时会轻松释然还是会难以割舍）
+I think we both should keep the best part（但我认为我们至少应该留下对彼此最好的回忆）
+如何被你吸引
+How we getting started（如何与你相爱）
+
+[Pop Ballad, Emotional Peak, Synth Strings, Powerful Vocals]
+I thought we were go along go along（又是如何幻想与你长相厮守）
+When I give you my broken heart in the coldest night please hold it tight（如果我在最冷的夜赠予你一颗支离破碎的心，请珍惜它）
+If you lie to me babe I just might let a falling dice decide my whole life（但倘若你欺骗了我，那我可能就会让余生随风飘摇）
+
+[Synth-Pop, Nostalgic, Cinematic, Mid-Tempo]
+Saturday night is cold outside（周六晚上，外面很冷）
+人们都是彼此 新欢与旧爱
+杂乱无章交织或者空白
+这就是种游戏还可以重来
+Saturday night is cold outside（认识你的那个周六晚上，外面很冷）
+也许那边火热也许灯没开
+也许都有想过一切都回来
+这就是种游戏还可以重来
+Saturday night is cold outside（和你分开的那个周六晚上，外面很冷）
+
+[Ambient, Echoing, Cinematic, Slow Tempo]
+Its cold outside
+Its cold outside
+Saturday night is cold outside（周六晚上，外面很冷）
+Its cold outside
+Its cold outside
+
+[Pop Ballad, Dramatic, Crescendo, Female Vocal]
+Journey makes you cry
+Journey makes you cry
+When I give you my broken heart in the coldest night please hold it tight（如果我在最冷的夜赠予你一颗支离破碎的心，请你抱紧它）
+
+=== Suggested Styles ===
+
+- Highly dramatic pop ballad, featuring a powerful female vocal, sweeping piano arpeggios, and emotional string crescendo.
+
+- Mid-tempo Chinese R&B, smooth soulful vocals, complex rhythmic flow, deep synth bass, confessional and intimate tone.
+
+- 80s cinematic synth-pop, nostalgic mid-tempo groove, echoing drums, melancholic synth pads, capturing a cold city night.
+
+- Uplifting pop anthem with a strong build-up, reflective vocals, layered synths, powerful anthemic chorus, cinematic scope.
+
+- Deep ambient soundscape, slow tempo, echoing reverb, cinematic pads, sparse piano chords, evoking a sense of cold solitude.
+
+=== Metadata ===
+Model: gemma4:e4b
+Saved At: 2026-04-29 18:29:34

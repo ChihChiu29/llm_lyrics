@@ -1,0 +1,83 @@
+[Emotional Build-up, Cinematic Pop, Soft Vocals]
+当你可以抱紧我
+
+[Verse 1]
+Hold me when you can
+Cause I don't know when the world will end
+Let the nightmare go away, huh
+卸下防备
+
+[R&B, Confessional, Mid-Tempo Groove]
+[Verse 2]
+Baby I will do
+I heard your friend set you up, is that true
+Sorry, I read your messages
+I'm worried about you
+
+[Ballad, Introspective, Piano Driven]
+[Verse 3]
+玫瑰风干了 你舍不得扔
+说看到时间的流逝 会让人美的心疼
+明白你希望我也学会稍微停下脚步
+看上次没痊愈的伤口 依旧贴着胶布 Uh
+
+[Acoustic Pop, Travel Theme, Cinematic Arpeggios]
+[Verse 4]
+凌晨的景色照旧催促早安
+我说不急依旧在T3 上次同个航班
+短暂的生命灵魂交织后 却各自赶路
+你说下个清晨希望和我看海岸长滩
+
+[Pop Rock, Building Tension, Urgent Beat]
+[Verse 5]
+眼泪痕迹还是被我偷偷发现
+解释控制不住 你总脑补我的画面
+下个旅程终点 平稳降落还是危险
+提醒我 These days friends are no longer simple friends
+
+[Empowerment Anthem, Synth Pop, Strong Vocals]
+[Verse 6]
+Baby I'm stronger than you think
+让我成全那些曾经陪我交心的朋友
+Set me up, they're too weak for me
+Snuggle up, baby, we keep accompany
+
+[Soul Pop, Harmonic Build, Intimate Duet Feel]
+[Verse 7]
+我的航班就快要落地
+你是否会在我家里等待我抱你
+You know you're safe with me
+Even the world is bleeding
+
+[Pop Ballad, Dramatic Bridge, Vocals Focus]
+[Verse 8]
+Why you treat me like that
+Said you don't need me to come back
+Holding my energy
+Don't play that hide and seek
+
+[Orchestral Pop, Climactic, Hopeful Melody]
+[Verse 9]
+Sun will rise from the east side
+I might leave on another night
+Will you hold me tight
+Like the first time like the last
+
+[Outro, Repetitive Hook, Fading Echo Effect]
+[Verse 10]
+Baby I will do
+I heard your friend set you up, is that true
+I'm sorry I read your messages
+I'm worried about you
+
+=== Suggested Styles ===
+
+- Reflective ballad, soft piano chords, and delicate female vocals conveying quiet longing and melancholic introspection.
+- Urgent Pop Rock build-up, driving drums, electric guitar riffs, capturing the tension of a rushed, suspicious journey.
+- Powerful Synth Pop anthem, stadium-sized drums, soaring vocals, building to a defiant, self-realizing climax.
+- Warm, harmonic R&B duet, intimate whispers, deep bass line, and soulful harmonies reflecting a safe, private moment.
+- Epic Orchestral Pop finale, sweeping strings, hopeful melody, massive drum hits, and a grand, cinematic sense of farewell.
+
+=== Metadata ===
+Model: gemma4:e4b
+Saved At: 2026-04-29 16:07:03
