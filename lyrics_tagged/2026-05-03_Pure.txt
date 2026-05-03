@@ -1,0 +1,67 @@
+Pure
+
+[Verse 1]
+[Structure: Verse, Energy: Medium, Vocals: Narrative/Introspective, Instrumentation: Synth Pop, building tension]
+都不敢相信完成新专辑
+曾经苦恼 歌迷指责歌单难以更新
+看看我们是多么的光鲜亮丽
+可从不care的人才不care谁在唱戏
+[Verse 2]
+[Structure: Verse, Energy: Medium-High, Vocals: Confident/Sarcastic, Instrumentation: Indie Rock, driving beat]
+回答他 没错 我们确实在唱戏
+导演是自己 自己是编剧
+本色出演 把他心灵占据
+让我诙谐的描述一部荒诞剧
+[Verse 3]
+[Structure: Pre-Chorus/Build-up, Energy: High/Aggressive, Vocals: Shout/Frustrated, Instrumentation: Rock Anthem, distorted synths]
+随时触发情绪 放声怒骂
+内心压抑太久 怕被固化
+心房打开 让你游走其中
+可以尝试理解 可以 Don't give a fuck
+可以欣然接受 但别再瞻前顾后
+看清楚现实 骗子 面子 朋友别再刻意拼凑
+[Verse 4]
+[Structure: Chorus/Bridge, Energy: Anthemic, Vocals: Powerful/Uplifting, Instrumentation: Stadium Pop, massive drums]
+[Verse 5]
+[Structure: Chorus/Bridge, Energy: Anthemic, Vocals: Powerful/Uplifting, Instrumentation: Stadium Pop, massive drums]
+[Verse 6]
+[Structure: Bridge, Energy: Medium, Vocals: Reflective/Mature, Instrumentation: Cinematic Pop, piano chords, strings]
+船早停靠在渡口 也应该学会放手
+当然撇清开和那些伪青睐你的人
+放手一搏 不被束手
+摸着良心问你自己 Real不real
+Contract with the devil, make a deal
+比起幻想 站在聚光灯下
+你更青睐直接点的欲望 比如更想中乐透
+没有绝对的忠诚 人类都emotion
+我更希望社会的全部
+真的是有爱情和家庭来构成
+[Verse 7]
+[Structure: Pre-Chorus/Tension Build, Energy: Low/Suspenseful, Vocals: Whispered/Paranoid, Instrumentation: Minimalist Synth, deep bass]
+I'm so tired of it 那些明争暗斗
+只是不想公开挑衅 亲自张口
+始终不敢相你们还没看透
+谁是最后赢家 What the hell I know
+[Verse 8]
+[Structure: Chorus/Climax, Energy: Anthemic, Vocals: Powerful/Uplifting, Instrumentation: Stadium Pop, massive drums]
+[Verse 9]
+[Structure: Chorus/Climax, Energy: Anthemic, Vocals: Emotional Peak, Instrumentation: Stadium Pop, massive drums, key change]
+[Verse 10]
+[Structure: Outro, Energy: Medium-Low, Vocals: Spoken Word/Fade Out, Instrumentation: Echoing Synth, reverb, gradual fade]
+楼兰 Journey, ay
+
+=== Suggested Styles ===
+
+- Mid-tempo (115 BPM), sharp, autotuned female vocals, punchy arpeggiated synths, tight drum machine beat, and dramatic filter sweeps creating a cold, detached, pop-art atmosphere.
+
+- Fast tempo (140 BPM), raspy male vocals, distorted power chords, aggressive slap bass line, massive gated reverb drums, and chaotic punk energy build-up.
+
+- Up-tempo (128 BPM), powerful belted vocals, soaring synth pads, huge gated reverb drums, and an epic orchestral build-up designed for a massive, euphoric stadium anthem climax.
+
+- Slow tempo (80 BPM), soulful, mature male vocals, melancholic grand piano chords, sweeping cinematic strings, and gentle Rhodes electric piano creating a reflective, spacious mood.
+
+- Suspenseful (90 BPM), whispered male vocals, deep sub-bass pulses, echoing detuned synthesizers, and sparse hi-hats, layered with vinyl crackle for a paranoid, minimalist trip-hop soundscape.
+
+=== Metadata ===
+Model: gemma4:e4b
+Saved At: 2026-05-03 01:17:56

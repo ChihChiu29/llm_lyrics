@@ -1,0 +1,69 @@
+荣耀
+
+[Structure: Anthem Chorus, Energy: High/Swagger, Vocals: Male Lead, Instrumentation: Heavy 808 Bass, Trap Drums]
+我去洗脚城不洗脚
+我超爱听四个字先生你好
+哥们我仿佛陷入了泥沼
+我是她抹不去的记号
+
+[Structure: Confident Hook, Energy: Medium-High, Vocals: Smooth Male Rapper, Instrumentation: Crisp Hi-Hats, Jazzy Samples, Synth Pads]
+哥们不跟你们讨论技巧
+哥们平时注重仪容仪表
+对着镜子向我自己祈祷
+我是一颗钻石我在闪耀
+
+[Structure: Narrative Verse, Energy: Medium, Vocals: Aggressive Flow, Instrumentation: Lo-Fi Boom Bap Beat, Sub Bassline]
+哥有一点闷骚 哥经得起推敲
+皇家橡树手表 搭配戈雅书包
+我满大街的犯罩 看不惯把我干掉
+和兄弟对下暗号 把他们全都绊倒
+
+[Structure: Rapid Fire Verse, Energy: Medium-High, Vocals: Quick Delivery Flow, Instrumentation: Punchy Drums, Minimalist Beat, Ad-libs]
+我兄弟他去了广东他主要做皮草
+我兄弟他每次健身都爱拿瓶怡宝
+我兄弟他小学毕业但是他有头脑
+我兄弟爱玩飞叨你兄弟爱捡肥皂
+
+[Structure: Storytelling Bridge, Energy: Medium, Vocals: Conversational/Intimate, Instrumentation: Piano Chord Progression, Cinematic Strings]
+她是麦当劳我是星巴克
+她说一见到我她就心发热
+顺手脱下了我的黑皮夹克
+我说慢慢来姑娘你急啥呢
+
+[Structure: Confrontational Verse, Energy: High/Aggressive, Vocals: Intense Shout/Flow, Instrumentation: Hard-Hitting Drums, Synth Leads, Distortion]
+这世界有好多的沙雕
+我看着我混乱的周遭
+冷酷像一座冰雕
+不用别人为我撑腰
+你是老鼠 我是黑猫
+我是大炮 我裤裆藏炸药
+让你大叫 我不让你睡觉
+哥们这个赛季超标
+
+[Structure: Anthem Chorus, Energy: Peak/Swagger, Vocals: Full Power Male Lead, Instrumentation: Heavy 808 Bass, Trap Drums, Echo]
+我去洗脚城不洗脚
+我超爱听四个字先生你好
+哥们我仿佛陷入了泥沼
+我是她抹不去的记号
+
+[Structure: Outro Hook, Energy: High, Vocals: Strong Male Voice, Instrumentation: Synth Pads, Rhythmic Ad-libs, Reverb]
+哥们不跟你们讨论技巧
+哥们平时注重仪容仪表
+对着镜子向我自己祈祷
+我是一颗钻石我在闪耀
+
+=== Suggested Styles ===
+
+- 140 BPM, male lead with a confident, echoing voice. Heavy, distorted 808 bass drops, trap hi-hat rolls, and stadium-sized synth pads creating a massive, swaggering, and triumphant anthem atmosphere.
+
+- 90 BPM, smooth, soulful male rapper with a polished vocal texture. Jazzy vinyl samples, crisp electric piano chords, and muted boom-bap drums giving a luxurious, introspective, and undeniably confident feel.
+
+- 85 BPM, aggressive, rapid-fire flow with a raw, dusty vocal tone. Lo-fi boom-bap beat, deep sub-bassline, subtle vinyl crackle, and a gritty, narrative atmosphere reminiscent of old school hip-hop.
+
+- 150 BPM, intense, shouting male vocals with a raspy, confrontational edge. Hard-hitting industrial drums, aggressive synth leads with distortion, and sharp sound effects creating a high-energy, battle-ready, and menacing soundscape.
+
+- 75 BPM, intimate, conversational male vocals with a warm, mellow tone. Cinematic string arrangements, delicate fingerpicked piano chord progressions, and reverb-drenched ambient pads creating a romantic, vulnerable, and cinematic story-telling mood.
+
+=== Metadata ===
+Model: gemma4:e4b
+Saved At: 2026-05-03 01:27:32
