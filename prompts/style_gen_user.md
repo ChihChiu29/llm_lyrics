@@ -1,0 +1,3 @@
+FILL_TEMPLATE:
+INPUT_LYRICS: {lyrics}
+POOL: {pool}

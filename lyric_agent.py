@@ -29,7 +29,73 @@ class LyricAgent:
         self.C_GRAY = "\033[90m"
         self.C_YELLOW = "\033[33m"
         self.C_GREEN = "\033[32m"
+        self.C_RED = "\033[31m"
         self.C_RESET = "\033[0m"
+
+        # 加载批评家系统提示词
+        self.critic_system_prompt = ""
+        if os.path.exists("prompts/critic_system.md"):
+            with open("prompts/critic_system.md", 'r', encoding='utf-8') as f:
+                self.critic_system_prompt = f.read()
+
+    def get_critic_feedback(self, content):
+        """让批评家对内容进行评价"""
+        print(f"\n{self.C_YELLOW}[正在请制作人过目...]{self.C_RESET}")
+        feedback = self.ollama.call(f"请评审以下内容：\n\n{content}", 
+                                     system_prompt=self.critic_system_prompt, 
+                                     spinner=Spinner("制作人正在审阅"))
+        return feedback
+
+    def auto_improve_with_critic(self, content, stage="LYRICS", max_rounds=2):
+        """自动根据批评意见进行迭代优化"""
+        current_content = content
+        for i in range(max_rounds):
+            feedback = self.get_critic_feedback(current_content)
+            
+            # 尝试提取分数并高亮显示
+            score_match = re.search(r"【得分：(\d+(?:\.\d+)?)/10】", feedback)
+            if score_match:
+                score = score_match.group(1)
+                print(f"{self.C_CYAN}>>> 制作人评分: {self.C_YELLOW}{score}/10{self.C_RESET}")
+
+            # 判断批评家是否满意
+            check_template = ""
+            if os.path.exists("prompts/critic_check.md"):
+                with open("prompts/critic_check.md", 'r', encoding='utf-8') as f:
+                    check_template = f.read()
+            
+            check_p = check_template.format(feedback=feedback) if check_template else f"根据以下反馈，制作人是否满意？YES/NO\n{feedback}"
+            is_satisfied = self.ollama.call(check_p, stream=False, temperature=0)
+            
+            if "YES" in is_satisfied.upper():
+                print(f"{self.C_GREEN}[制作人批准了该版本]{self.C_RESET}")
+                return current_content
+            
+            print(f"{self.C_YELLOW}[制作人提出了修改意见，正在进行第 {i+1} 轮优化...]{self.C_RESET}")
+            
+            if stage == "LYRICS":
+                improve_template = ""
+                if os.path.exists("prompts/critic_improve_lyrics.md"):
+                    with open("prompts/critic_improve_lyrics.md", 'r', encoding='utf-8') as f:
+                        improve_template = f.read()
+                mod_prompt = improve_template.format(feedback=feedback, content=current_content) if improve_template else f"制作人意见：\n{feedback}\n\n当前歌词：\n{current_content}"
+                current_content = self.ollama.call(mod_prompt, spinner=Spinner("正在根据意见修改歌词"))
+                self.lyrics_index += 1
+                with open(f"tmp_song_lyrics_{self.lyrics_index:02d}.md", 'w', encoding='utf-8') as f:
+                    f.write(current_content)
+            elif stage == "STYLE":
+                improve_template = ""
+                if os.path.exists("prompts/critic_improve_style.md"):
+                    with open("prompts/critic_improve_style.md", 'r', encoding='utf-8') as f:
+                        improve_template = f.read()
+                mod_prompt = improve_template.format(feedback=feedback, content=current_content) if improve_template else f"制作人意见：\n{feedback}\n\n当前风格：\n{current_content}"
+                res = self.ollama.call(mod_prompt, spinner=Spinner("正在根据意见修改风格"))
+                current_content = self._strict_clean_styles(res)
+                self.s_version += 1
+                with open(f"tmp_song_styles_v{self.s_version:02d}.txt", 'w', encoding='utf-8') as f:
+                    f.write(current_content)
+                    
+        return current_content
 
     def run(self):
         print(f"{self.C_CYAN}=== 中文歌词创作助手 (Ultimate Edition) ==={self.C_RESET}")
@@ -155,7 +221,7 @@ class LyricAgent:
             self.state = "STYLE_DISCUSSION"
 
         lyrics_files = sorted(glob.glob("tmp_song_lyrics_*.md"), key=lambda x: int(re.search(r'(\d+)', x).group(1)))
-        if lyrics_files:
+        if lyrics_files and os.path.exists("tmp_song_approved.md"):
             latest_lyrics = lyrics_files[-1]
             self.lyrics_index = int(re.search(r'(\d+)', latest_lyrics).group(1))
             with open(latest_lyrics, 'r', encoding='utf-8') as f:
@@ -218,7 +284,11 @@ class LyricAgent:
     def handle_song_description(self):
         self.show_header("场景描述")
         if self.description_index == 0:
-            prompt = f"为风格为 '{self.style}' 的中文歌曲创作独特背景。要有画面感。"
+            gen_template = ""
+            if os.path.exists("prompts/desc_gen.md"):
+                with open("prompts/desc_gen.md", 'r', encoding='utf-8') as f:
+                    gen_template = f.read()
+            prompt = gen_template.format(style=self.style) if gen_template else f"为风格为 '{self.style}' 的中文歌曲创作独特背景。要有画面感。"
             desc = self.ollama.call(prompt, temperature=1.3, spinner=Spinner("正在构思场景"))
             if desc:
                 self.description_index = 1
@@ -269,13 +339,20 @@ class LyricAgent:
             approved_desc = f.read()
         
         if self.lyrics_index == 0:
-            prompt = f"根据场景创作歌词：\n{approved_desc}\n\n风格：{self.style}"
+            gen_template = ""
+            if os.path.exists("prompts/lyric_gen.md"):
+                with open("prompts/lyric_gen.md", 'r', encoding='utf-8') as f:
+                    gen_template = f.read()
+            prompt = gen_template.format(desc=approved_desc, style=self.style) if gen_template else f"根据场景创作歌词：\n{approved_desc}\n\n风格：{self.style}"
             lyrics = self.ollama.call(prompt, spinner=Spinner("正在谱写歌词"))
             if lyrics:
                 self.lyrics_index = 1
-                self.current_lyrics = lyrics
                 with open(f"tmp_song_lyrics_{self.lyrics_index:02d}.md", 'w', encoding='utf-8') as f:
                     f.write(lyrics)
+                
+                # 自动请批评家优化
+                lyrics = self.auto_improve_with_critic(lyrics, stage="LYRICS")
+                self.current_lyrics = lyrics
             else:
                 return
         else:
@@ -342,23 +419,28 @@ class LyricAgent:
             if os.path.exists("song_style_prompts.md"):
                 with open("song_style_prompts.md", 'r', encoding='utf-8') as f:
                     given_pool = f.read()
-            system_prompt = (
-                "STRICT_PROTOCOL: SUNO_DATA_EXPORT\n"
-                "TASK: OUTPUT_LISTS_ONLY\n"
-                "STRICT_RULES:\n"
-                "1. NO CHITCHAT. NO INTRODUCTION. NO REASONING.\n"
-                "2. NO PARENTHESES. NO BOLDING.\n"
-                "3. OUTPUT ONLY THREE HEADERS: ### Given, ### hiphop, ### any.\n"
-                "4. EACH ITEM MUST START WITH '- '.\n"
-                "5. EACH ITEM MUST BE 15-25 ENGLISH WORDS."
-            )
-            prompt = f"FILL_TEMPLATE:\nINPUT_LYRICS: {self.current_lyrics}\nPOOL: {given_pool}"
+            
+            system_template = ""
+            if os.path.exists("prompts/style_gen_system.md"):
+                with open("prompts/style_gen_system.md", 'r', encoding='utf-8') as f:
+                    system_template = f.read()
+            system_prompt = system_template if system_template else "资深风格策划师。直接输出列表。"
+
+            user_template = ""
+            if os.path.exists("prompts/style_gen_user.md"):
+                with open("prompts/style_gen_user.md", 'r', encoding='utf-8') as f:
+                    user_template = f.read()
+            prompt = user_template.format(lyrics=self.current_lyrics, pool=given_pool) if user_template else f"FILL_TEMPLATE:\nINPUT_LYRICS: {self.current_lyrics}\nPOOL: {given_pool}"
+            
             res = self.ollama.call(prompt, system_prompt=system_prompt, spinner=Spinner("正在策划风格"))
             if res:
                 self.style_suggestions = self._strict_clean_styles(res)
                 self.s_version = 1
                 with open(f"tmp_song_styles_v{self.s_version:02d}.txt", 'w', encoding='utf-8') as f:
                     f.write(self.style_suggestions)
+                
+                # 自动请批评家优化
+                self.style_suggestions = self.auto_improve_with_critic(self.style_suggestions, stage="STYLE")
                 just_streamed = True
             else:
                 return

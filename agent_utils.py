@@ -130,6 +130,14 @@ class OllamaClient:
         return "CHAT", user_input
 
 def handle_rich_input(prompt_text, multiline=True):
+    # 如果不是终端，回退到基础 input()
+    if not sys.stdin.isatty():
+        try:
+            print(f"\033[32m{prompt_text}\033[0m", end=" ", flush=True)
+            return sys.stdin.readline().strip()
+        except (KeyboardInterrupt, EOFError):
+            return "/quit"
+
     kb = KeyBindings()
     @kb.add('enter')
     def _(event): event.current_buffer.validate_and_handle()
