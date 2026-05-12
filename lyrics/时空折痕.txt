@@ -1,0 +1,93 @@
+时空折痕
+
+《时空折痕》  
+（周杰伦风格·中国风叙事）  
+
+**主歌1**  
+青花瓷片浮空 裂缝里游动1972年的雨声  
+老唱片机沙沙 唱着《七里香》的旋律  
+音符在琴键上 凝成1988年的桂花  
+
+**主歌2**  
+你站在2023年的青石巷口  
+手中油纸伞是1950年的款式  
+伞面倒映1943年氤氲的月光  
+一缕发丝垂落 凝成2045年的第一粒雪  
+
+**预副歌**  
+当1972的雨滴落  
+当1988的桂花飘过  
+当1943月光映伞面  
+当2045雪落指尖  
+
+**副歌**  
+时光在裂缝中游走  
+过去未来都停留  
+雨声 桂花 月光 雪  
+都是你眉间的温柔  
+我穿越所有年份  
+只为在当下与你相拥  
+当发丝凝成雪  
+当伞面映月光  
+我们就在时空中央  
+
+**桥段**  
+古筝拨动时光  
+1943年的月光  
+1950年的伞  
+1972年的雨  
+1988年的桂花  
+2023的巷  
+2045的雪  
+所有时间都指向你  
+
+**副歌（升调）**  
+时光在裂缝中游走  
+过去未来都停留  
+雨声 桂花 月光 雪  
+都是你眉间的温柔  
+我穿越所有年份  
+只为在当下与你相拥  
+当发丝凝成雪  
+当伞面映月光  
+我们就在时空中央  
+
+**尾声（呢喃）**  
+你是我穿越时空的等待  
+（古筝余韵渐弱，雨声与雪花声交织）  
+
+---
+
+注：  
+- 严格遵循周杰伦式中国风叙事逻辑：将具象物象（青花瓷、油纸伞、古筝）与抽象时空折叠，用“氤氲”“游走”“凝成”等词营造画面流动感；  
+- 副歌“眉间温柔”“时空中央”延续《青花瓷》《夜的第七章》中“天青色等烟雨”“在时空的中央”等经典意象复刻；  
+- 桥段用“古筝拨动时光”作为听觉线索，呼应周氏曲风中器乐与叙事的无缝衔接，尾声以“雨声与雪花声交织”强化沉浸式听觉画面，符合其“音乐电影化”创作理念。
+
+=== Suggested Styles ===
+
+### Given
+- Zhou Jielun style Chinese wind narrative with time-folding objects like porcelain shards and oil-paper umbrellas creating cinematic flow
+- Lyrics blend abstract time concepts with concrete items like rain sounds and osmanthus through poetic imagery
+- Bridge seamlessly weaves historical eras through traditional instruments like guzheng for cinematic storytelling
+- Final whispered section blends rain and snow sounds for immersive audio experience matching music film concept
+### hiphop
+- Alternative Rap features staccato bursts followed by slurred drawls with unpredictable flow at 90-105 BPM
+- Experimental Hip-Hop uses drunken flow and mumble rap elements with shifting tempos and gritty bass
+- Hardcore Hip-Hop blends 90s boom bap with modern polish featuring aggressive male vocals and crisp drums
+- Modern Rap incorporates trap elements with hype atmosphere and intricate rhyming patterns
+- Chinese Hip-Hop merges boom bap with traditional instruments such as pipa creating gritty streetwise style
+- Melodic Rap delivers chill hip-hop with clean electric guitar riffs and sad reflective emotional tone
+- Trap style with Chinese instruments has heavy 808s and fast mumbled flow at 140 BPM
+- Dark Mandarin hip-hop presents moody atmosphere and internal conflict using distorted sounds
+- Luxury Trap features heavy bass distorted 808s with cocky vocals for club banger energy
+- Neo hip hop ballad has emotional rap verses and melodic chorus with trap beat and atmospheric synths
+### any
+- Mandopop ballad features gentle acoustic guitar and emotional vocals about longing and first impressions
+- Neo soul Chinese ballad has mellow beat and layered harmonies expressing heartfelt vulnerability
+- Mandarin emotional pop ballad with piano and strings for restrained sadness at 70 BPM
+- Mandopop mid-tempo beat focuses on regretful lyrics with hopeful undertones and layered instrumentation
+- Contemporary Chinese melodic pop blends future bass chill-trap fusion for cinematic modern production
+
+=== Metadata ===
+Model: qwen3-next:80b-cloud
+Time: 2026-05-11 20:33:59
