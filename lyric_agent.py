@@ -46,32 +46,29 @@ class LyricAgent:
                                      spinner=Spinner("制作人正在审阅"))
         return feedback
 
-    def auto_improve_with_critic(self, content, stage="LYRICS", max_rounds=2):
-        """自动根据批评意见进行迭代优化"""
+    def auto_improve_with_critic(self, content, stage="LYRICS", max_rounds=50):
+        """自动根据批评意见进行迭代优化，直到得分达到 8 分或以上"""
         current_content = content
         for i in range(max_rounds):
             feedback = self.get_critic_feedback(current_content)
             
             # 尝试提取分数并高亮显示
+            score = 0
             score_match = re.search(r"【得分：(\d+(?:\.\d+)?)/10】", feedback)
             if score_match:
-                score = score_match.group(1)
+                score = float(score_match.group(1))
                 print(f"{self.C_CYAN}>>> 制作人评分: {self.C_YELLOW}{score}/10{self.C_RESET}")
+                
+                if score >= 8:
+                    print(f"{self.C_GREEN}[制作人评分达到 {score}，批准通过！]{self.C_RESET}")
+                    return current_content
 
-            # 判断批评家是否满意
-            check_template = ""
-            if os.path.exists("prompts/critic_check.md"):
-                with open("prompts/critic_check.md", 'r', encoding='utf-8') as f:
-                    check_template = f.read()
-            
-            check_p = check_template.format(feedback=feedback) if check_template else f"根据以下反馈，制作人是否满意？YES/NO\n{feedback}"
-            is_satisfied = self.ollama.call(check_p, stream=False, temperature=0)
-            
-            if "YES" in is_satisfied.upper():
-                print(f"{self.C_GREEN}[制作人批准了该版本]{self.C_RESET}")
+            # 如果没到 8 分，或者没找到分数，继续优化
+            if i < max_rounds - 1:
+                print(f"{self.C_YELLOW}[得分未达标 ({score}/10)，正在进行第 {i+1} 轮优化...]{self.C_RESET}")
+            else:
+                print(f"{self.C_RED}[已达到最大优化轮数 ({max_rounds})，尽管得分仅为 {score}/10，仍将呈现给用户。]{self.C_RESET}")
                 return current_content
-            
-            print(f"{self.C_YELLOW}[制作人提出了修改意见，正在进行第 {i+1} 轮优化...]{self.C_RESET}")
             
             if stage == "LYRICS":
                 improve_template = ""

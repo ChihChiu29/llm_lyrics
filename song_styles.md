@@ -2,6 +2,8 @@
 
 - Chinese hip-hop song. Any topic, could be romance related, life related, and any other topics.
 
+- Dark ambient club deconstruction, suffocating quiet, whisper, breathing, mixed with cool hip hop.
+
 - Funky songs, like "Uptown Funk"
 
 - 中国民歌风格的说唱音乐，像李佳隆或朝三那种，音乐有混有传统乐器和民族唱腔
