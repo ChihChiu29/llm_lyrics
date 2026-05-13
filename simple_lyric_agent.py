@@ -25,6 +25,7 @@ class SimpleLyricAgent:
 
         # 加载提示词模板
         self.critic_system_prompt = self._load_prompt("prompts/critic_system.md", "你是一位严苛的音乐制作人。")
+        self.writer_system_prompt = self._load_prompt("prompts/writer_system.md", "你是一位专业的歌词创作人。")
         self.gen_template = self._load_prompt("prompts/simple_gen.md", "创作歌曲: {style}")
         self.improve_template = self._load_prompt("prompts/simple_improve.md", "根据反馈修改: {feedback}")
         
@@ -72,7 +73,7 @@ class SimpleLyricAgent:
                 return current_content
             
             mod_prompt = self.improve_template.format(context=context, feedback=feedback, content=current_content)
-            current_content = self.ollama.call(mod_prompt, spinner=Spinner("制作人正在指挥修改"))
+            current_content = self.ollama.call(mod_prompt, system_prompt=self.writer_system_prompt, spinner=Spinner("制作人正在指挥修改"))
             self.gen_version += 1
             with open(f"tmp_simple_gen_{self.gen_version:02d}.md", 'w', encoding='utf-8') as f:
                 f.write(current_content)
@@ -134,7 +135,7 @@ class SimpleLyricAgent:
         
         gen_prompt = self.gen_template.format(style=self.style)
         
-        content = self.ollama.call(gen_prompt, spinner=Spinner("正在创作"))
+        content = self.ollama.call(gen_prompt, system_prompt=self.writer_system_prompt, spinner=Spinner("正在创作"))
         if not content:
             return
 
