@@ -1,0 +1,64 @@
+歌曲标题：时间的腐蚀 (Corrosion of Time)
+
+--- 标注歌词 ---
+[Verse 1]
+[Deep, muted R&B bass groove establishes a slow, heavy pulse; high-frequency synth grain introduces a sense of granular decay, emphasizing physical inertia and the sensation of internal decay]
+Iron bleeds under dying heat
+Erosion grinds the living bone
+Grit settles where the substance lies
+Silence severs what was known
+
+[Pre-Chorus]
+[Sub-bass pulse accelerates into a sharp, physical thrust; rhythmic tension builds with held, strained vocal breath, pushing violently against the groove]
+Void clamps down, the structure starts to break
+Pressure fractures, the promise starts to shake
+
+[Chorus]
+[Low, dissonant French Horns enter slowly, heavily distorted in the lower register, layered with aggressively reverbed, soaring vocal harmonies; rhythm is driving and insistent, creating a sense of physical tearing]
+Gravity rips my core
+Unmaking anchors, squeezing for more
+Melody shatters in raw space
+Leaving the ruin in this place
+
+[Verse 2]
+[Tempo relaxes into a deep, sensual R&B groove; focus shifts to textural warmth overlaid with metallic undertones, emphasizing the sensual weight of memory and lingering physical residue]
+I carve the lines where matter lies
+Memory etched in cold, dead skies
+Atmosphere spins, a phantom weave
+The weight we held, we can no longer believe
+
+[Pre-Chorus]
+[Strings become more active, sharp, syncopated percussion enters the pulse, emphasizing the accelerating anxiety and rhythmic urgency]
+Void clamps down, the structure starts to break
+Pressure fractures, the promise starts to shake
+
+[Chorus]
+[Intense emotional peak, dynamic shift to full orchestral layering; dissonant harmony is sustained and heavy, maximizing the physical tension between melody and dissonance]
+Gravity rips my core
+Unmaking anchors, squeezing for more
+Melody shatters in raw space
+Leaving the ruin in this place
+
+[Bridge]
+[Instrumentation strips back to a deep, sustained sub-bass drone and shimmering, cold synth chords; this section is a vacuum of pure, suffocating sonic friction, holding the tension just before impact]
+Void. Void.
+Static Friction. The air is tearing.
+Silence holds the strain.
+
+[Chorus]
+[Final powerful delivery, maximal emotional release; sustained brass and synth harmony with heavy, lingering reverb trails, the dissonance resolves into heavy, resigned force]
+Gravity rips my core
+Unmaking anchors, squeezing for more
+Melody shatters in raw space
+Leaving the ruin in this place
+
+--- Style Prompts ---
+[R&B Groove Foundation: Deep, resonant sub-bass groove anchors the entire track; tempo is slow but relentlessly heavy, emphasizing physical inertia and material density; the low end must feel like physical compression.]
+[Neo-Classical Tension: Sustained, highly dissonant string chords (violas and cellos) act as crushing weight; brass enters with slow, deliberate, and intentionally unresolved melodic lines, creating palpable, heavy sonic friction that feels like physical pressure.]
+[Ethereal Dream Pop Texture: High-frequency granular synthesis and wavetable arpeggios shimmer above the groove, emphasizing cold, metallic textures and sonic fragmentation; warm analog synth pads layer the harmonic foundation with vast, cold space.]
+[Rhythmic Conflict Command: Pre-Chorus demands an immediate, sharp acceleration of the sub-bass pulse, creating a physical thrust; Chorus requires an explosive, dynamic release where orchestral swells feel inevitably and physically crushing.]
+[Sound Design: Mandate the R&B low end to physically *squeeze* and *compress* the orchestral layers; ensure low-frequency physical pressure must violently collide with high-frequency, sharp, digital distortion. Utilize evolving granular noise textures to mimic material erosion and extreme sonic friction; the tension must be a collision of density and sharpness.]
+
+=== Metadata ===
+Model: gemma4:e2b
+Style: 4
