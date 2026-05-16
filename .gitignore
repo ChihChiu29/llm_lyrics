@@ -3,4 +3,4 @@ tmp_*
 .env
 
 
-server_log.json
+server_log.*

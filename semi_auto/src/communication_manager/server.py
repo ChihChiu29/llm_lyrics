@@ -28,8 +28,23 @@ def write_log_event(event_type, interaction):
     
     with log_lock:
         try:
-            with open('server_log.json', 'w', encoding='utf-8') as f:
-                json.dump(list(interaction_logs), f, indent=2, ensure_ascii=False)
+            with open('server_log.txt', 'w', encoding='utf-8') as f:
+                for log in interaction_logs:
+                    ts = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(log['timestamp']))
+                    msg = log['interaction']['input_string']
+                    # truncate long messages for readability
+                    if len(msg) > 50: msg = msg[:47] + '...'
+                    
+                    log_line = f"[{ts}] {log['event_type']:<15} ID: {log['interaction']['id']} | Msg: {msg}\n"
+                    
+                    if log['event_type'] == 'COMPLETED' and log['interaction'].get('output_string'):
+                        out_msg = log['interaction']['output_string']
+                        # Replace newlines with spaces for single-line logging, or just truncate
+                        out_msg = out_msg.replace('\n', '\\n')
+                        if len(out_msg) > 1000: out_msg = out_msg[:997] + '...'
+                        log_line += f"                  --> Response: {out_msg}\n"
+                        
+                    f.write(log_line)
         except Exception as e:
             print(f"Failed to write log: {e}")
 

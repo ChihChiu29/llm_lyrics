@@ -3,7 +3,7 @@ console.log('LLM Communication Client: Background service worker started.');
 const SERVER_URL = 'http://localhost:8080';
 let isProcessing = false;
 let processingTimeout = null;
-let isEnabled = true;
+let enabledTabIds = new Set();
 
 function setProcessing(state) {
   isProcessing = state;
@@ -24,31 +24,51 @@ function setProcessing(state) {
 }
 
 // Initialize state from storage
-chrome.storage.local.get(['isEnabled'], (result) => {
-  if (result.isEnabled !== undefined) {
-    isEnabled = result.isEnabled;
+chrome.storage.local.get(['enabledTabIds'], (result) => {
+  if (result.enabledTabIds) {
+    enabledTabIds = new Set(result.enabledTabIds);
   }
-  updateBadge();
-  if (isEnabled) {
-    pollServer(); // Poll immediately on startup
+  
+  // Initialize badges for all active tabs
+  chrome.tabs.query({}, (tabs) => {
+    for (const tab of tabs) {
+      updateBadge(tab.id);
+    }
+  });
+  
+  if (enabledTabIds.size > 0) {
+    pollServer(); // Poll immediately on startup if any tabs are enabled
   }
 });
 
-function updateBadge() {
-  const text = isEnabled ? "ON" : "OFF";
-  const color = isEnabled ? "#4CAF50" : "#F44336"; // Green / Red
-  chrome.action.setBadgeText({ text: text });
-  chrome.action.setBadgeBackgroundColor({ color: color });
+function updateBadge(tabId) {
+  const isEnabled = enabledTabIds.has(tabId);
+  chrome.action.setBadgeText({ text: isEnabled ? "ON" : "OFF", tabId: tabId });
+  chrome.action.setBadgeBackgroundColor({ color: isEnabled ? "#4CAF50" : "#F44336", tabId: tabId });
 }
 
 chrome.action.onClicked.addListener(async (tab) => {
-  isEnabled = !isEnabled;
-  await chrome.storage.local.set({ isEnabled: isEnabled });
-  updateBadge();
-  console.log(`Extension toggled. Now isEnabled = ${isEnabled}`);
+  const tabId = tab.id;
+  if (enabledTabIds.has(tabId)) {
+    enabledTabIds.delete(tabId);
+  } else {
+    enabledTabIds.add(tabId);
+  }
   
-  if (isEnabled) {
-    pollServer(); // Kick off a poll immediately if turned back on
+  await chrome.storage.local.set({ enabledTabIds: Array.from(enabledTabIds) });
+  updateBadge(tabId);
+  console.log(`Tab ${tabId} toggled. Now enabled = ${enabledTabIds.has(tabId)}`);
+  
+  if (enabledTabIds.has(tabId)) {
+    pollServer(); // Kick off a poll immediately if a tab was turned on
+  }
+});
+
+// Clean up closed tabs to prevent memory leaks in storage
+chrome.tabs.onRemoved.addListener((tabId) => {
+  if (enabledTabIds.has(tabId)) {
+    enabledTabIds.delete(tabId);
+    chrome.storage.local.set({ enabledTabIds: Array.from(enabledTabIds) });
   }
 });
 
@@ -67,13 +87,13 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 // Set a 15-second interval for frequent polling while the service worker is awake.
 // The 1-minute alarm above ensures the service worker wakes back up if Chrome suspends it.
 setInterval(() => {
-  if (isEnabled) {
+  if (enabledTabIds.size > 0) {
     pollServer();
   }
 }, 15000);
 
 async function pollServer() {
-  if (!isEnabled) {
+  if (enabledTabIds.size === 0) {
     return;
   }
 
@@ -103,15 +123,18 @@ async function startProcessing(interaction) {
   
   // Find a supported tab. For now, we only have the DeepSeek adapter implemented.
   chrome.tabs.query({ url: ["*://chat.deepseek.com/*"] }, async (tabs) => {
-    if (tabs.length === 0) {
-      console.log('Waiting for a supported tab to be opened/enabled...');
+    // Filter to only ENABLED tabs
+    const activeTabs = tabs.filter(t => enabledTabIds.has(t.id));
+    
+    if (activeTabs.length === 0) {
+      console.log('Waiting for a supported tab to be opened and ENABLED...');
       setProcessing(false);
       return;
     }
     
     // Try sending to tabs sequentially until one succeeds
     let success = false;
-    for (const tab of tabs) {
+    for (const tab of activeTabs) {
       try {
         const response = await chrome.tabs.sendMessage(tab.id, {
           action: 'process_interaction',

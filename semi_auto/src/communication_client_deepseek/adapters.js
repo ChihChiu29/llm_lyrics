@@ -21,11 +21,31 @@ class DeepSeekAdapter {
   }
 
   isGenerating(inputArea, sendButton) {
-    // - Generating: Send button is ENABLED (acts as Stop button) and textarea is EMPTY.
-    // - Finished: Send button is DISABLED (waiting for input) and textarea is EMPTY.
-    const isSendDisabled = sendButton && (sendButton.disabled || sendButton.classList.contains('ds-icon-button--disabled'));
+    if (!sendButton) return false;
     
-    // It's generating if it's NOT disabled and the textarea is empty
+    const html = sendButton.innerHTML;
+    
+    // 1. Check if the button shows the "Stop" square icon (M2 4.88...) or a loading spinner
+    if (html.includes('M2 4.88') || html.includes('ds-loading')) {
+      return true;
+    }
+    
+    // 2. Check if there's a blinking cursor in the last message block
+    const responseBlocks = document.querySelectorAll('.ds-markdown');
+    if (responseBlocks.length > 0) {
+      const lastBlock = responseBlocks[responseBlocks.length - 1];
+      if (lastBlock.querySelector('.ds-markdown-cursor, .blinking-cursor')) {
+        return true;
+      }
+    }
+    
+    // 3. If the button shows the "Send" up-arrow (M8.3125...), it's definitely finished or idle
+    if (html.includes('M8.3125')) {
+      return false;
+    }
+
+    // Fallback: If not disabled and textarea is empty, it might still be generating
+    const isSendDisabled = sendButton.disabled || sendButton.classList.contains('ds-icon-button--disabled') || sendButton.hasAttribute('disabled');
     return !isSendDisabled && inputArea.value.trim() === '';
   }
 
