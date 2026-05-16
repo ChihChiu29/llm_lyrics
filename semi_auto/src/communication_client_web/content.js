@@ -1,6 +1,6 @@
 // content.js
 console.log('LLM Communication Client: Content script loaded and ready.');
-const SERVER_URL = 'http://localhost:8080';
+const SERVER_URL = 'http://localhost:9223';
 
 let currentInteraction = null;
 let checkInterval = null;
@@ -62,14 +62,17 @@ async function processInteraction(interaction) {
     inputArea.value = interaction.input_string;
     inputArea.dispatchEvent(new Event('input', { bubbles: true }));
 
-    // Wait a brief moment before clicking send
+    // Wait at least 5 seconds before starting to check (as requested)
     setTimeout(() => {
       const sendButton = adapter.getSendButton(inputArea);
       if (sendButton) {
         sendButton.click();
         
-        // 3. Periodically check if response is ready (every 10 seconds)
-        checkInterval = setInterval(checkResponseReady, 10000);
+        // 3. Periodically check if response is ready (every 5 seconds)
+        console.log('Interaction sent. Waiting 5 seconds before first check...');
+        setTimeout(() => {
+           checkInterval = setInterval(checkResponseReady, 5000);
+        }, 5000);
       } else {
         throw new Error('Send button not found');
       }

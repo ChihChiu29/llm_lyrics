@@ -1,6 +1,6 @@
 # Communication Manager API
 
-Server runs on `localhost:8080`.
+Server runs on `localhost:9223`.
 
 ## Endpoints
 
@@ -12,42 +12,37 @@ Adds a new interaction to the end of the queue.
 - **Body:**
   ```json
   {
-    "input_string": "The text to be sent to the LLM."
+    "input_string": "The text to be sent to the LLM.",
+    "client": "qwen" (optional, defaults to deepseek)
   }
   ```
 - **Response:**
   ```json
   {
     "id": "unique-uuid",
-    "status": "PENDING"
+    "status": "PENDING",
+    "client": "qwen"
   }
   ```
 
 ### 2. Peek next interaction
-Returns the next interaction in the queue (the oldest one with status PENDING).
+Returns the interaction at the head of the queue. The interaction remains in the queue until it is updated to `CONSUMED`.
 
 - **URL:** `/api/interaction/next`
 - **Method:** `GET`
-- **Response:**
-  ```json
-  {
-    "id": "unique-uuid",
-    "input_string": "The text to be sent to the LLM.",
-    "output_string": null,
-    "status": "PENDING"
-  }
-  ```
-  Returns `404` or `null` if no pending interactions.
+- **Response:** Interaction object or `null`.
 
 ### 3. Update interaction
-Change response and status of the next interaction in the queue. Only the next one in the queue is modifiable. If the status is updated to `COMPLETED` or `FAILED`, it will be automatically removed from the queue.
+Change response and status of the interaction at the head of the queue.
+
+Note: The interaction is **only removed from the queue** when its status is updated to `CONSUMED`. Marking it as `COMPLETED` or `FAILED` keeps it at the head of the queue so the caller can retrieve the result via the Peek API.
 
 - **URL:** `/api/interaction/next`
 - **Method:** `PUT`
 - **Body:**
   ```json
   {
-    "status": "RUNNING",  // Or COMPLETED, FAILED
+    "status": "RUNNING",  // Or COMPLETED, FAILED, CONSUMED
     "output_string": "Optional output string."
   }
   ```
@@ -66,14 +61,18 @@ Returns all interactions currently in the queue.
 
 - **URL:** `/api/interactions`
 - **Method:** `GET`
-- **Response:**
-  ```json
-  [
-    {
-      "id": "unique-uuid",
-      "input_string": "...",
-      "output_string": null,
-      "status": "PENDING"
-    }
-  ]
-  ```
+- **Response:** Array of interaction objects.
+
+### 5. List all interactions (Debug)
+Returns all interactions currently in the queue.
+
+- **URL:** `/api/interactions`
+- **Method:** `GET`
+- **Response:** Array of interaction objects.
+
+### 6. Clear all interactions
+Clears all interactions from the queue.
+
+- **URL:** `/api/interactions`
+- **Method:** `DELETE`
+- **Response:** `{"status": "cleared"}`

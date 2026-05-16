@@ -1,6 +1,6 @@
 // background.js
 console.log('LLM Communication Client: Background service worker started.');
-const SERVER_URL = 'http://localhost:8080';
+const SERVER_URL = 'http://localhost:9223';
 let isProcessing = false;
 let processingTimeout = null;
 let enabledTabIds = new Set();

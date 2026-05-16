@@ -4,7 +4,7 @@ import json
 import time
 
 class CommunicationClient:
-    def __init__(self, base_url="http://localhost:8080"):
+    def __init__(self, base_url="http://localhost:9223"):
         self.base_url = base_url
         
     def add_interaction(self, input_string, client="deepseek"):
@@ -17,6 +17,8 @@ class CommunicationClient:
         
     def peek_next_interaction(self):
         response = requests.get(f"{self.base_url}/api/interaction/next")
+        if response.status_code == 404:
+            return None
         response.raise_for_status()
         return response.json()
         
@@ -40,6 +42,11 @@ class CommunicationClient:
         response = requests.get(f"{self.base_url}/api/interactions")
         response.raise_for_status()
         return response.json()
+        
+    def clear_interactions(self):
+        response = requests.delete(f"{self.base_url}/api/interactions")
+        response.raise_for_status()
+        return response.json()
 
 def main():
     parser = argparse.ArgumentParser(description="Communication Manager CLI Client")
@@ -55,17 +62,15 @@ def main():
     
     # Update command
     parser_update = subparsers.add_parser("update", help="Update the next interaction")
-    parser_update.add_argument("--status", choices=["PENDING", "RUNNING", "COMPLETED", "FAILED"], help="New status")
+    parser_update.add_argument("--status", choices=["PENDING", "RUNNING", "COMPLETED", "FAILED", "CONSUMED"], help="New status")
     parser_update.add_argument("--output", help="Output string")
     
     # List command
     parser_list = subparsers.add_parser("list", help="List all interactions")
     
-    # Wait command
-    parser_wait = subparsers.add_parser("wait", help="Add interaction and wait for response")
-    parser_wait.add_argument("input_string", help="Input text for the interaction")
-    parser_wait.add_argument("--client", default="deepseek", help="Target client (deepseek, chatgpt, claude, qwen)")
-    parser_wait.add_argument("--timeout", type=int, default=120, help="Timeout in seconds")
+    # Clear command
+    parser_clear = subparsers.add_parser("clear", help="Clear all interactions")
+    
     
     args = parser.parse_args()
     client = CommunicationClient()
@@ -87,26 +92,10 @@ def main():
             res = client.list_interactions()
             print(json.dumps(res, indent=2))
             
-        elif args.command == "wait":
-            res = client.add_interaction(args.input_string, client=args.client)
-            interaction_id = res['id']
-            print(f"Added interaction: {interaction_id} for client: {args.client}")
-            print("Waiting for response...")
+        elif args.command == "clear":
+            res = client.clear_interactions()
+            print(json.dumps(res, indent=2))
             
-            start_time = time.time()
-            while time.time() - start_time < args.timeout:
-                res = client.list_interactions()
-                # Find if our interaction is still in queue (since it is removed on COMPLETED)
-                # But wait, we can't easily fetch a specific interaction by ID from the queue.
-                # Oh well, we can just check if it's in the queue and what its status is.
-                # Wait, if it's removed on COMPLETED, how do we get the output?
-                # Ah! The design says "When completed, automatically removed from queue."
-                # This means the caller won't be able to get the output after it's marked COMPLETED if it's removed immediately!
-                # Wait, the `update_next_interaction` returns the updated object. 
-                # But another process (like the caller) won't see it if it's removed. 
-                # For `wait` CLI, we might need a way to get it, or just print warning.
-                print("Wait CLI is limited because completed items are immediately removed from queue.")
-                break
                 
         else:
             parser.print_help()

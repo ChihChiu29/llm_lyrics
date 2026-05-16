@@ -20,16 +20,30 @@ class DeepSeekAdapter {
 
   isGenerating(inputArea, sendButton) {
     if (!sendButton) return false;
+    
     const html = sendButton.innerHTML;
-    if (html.includes('M2 4.88') || html.includes('ds-loading')) return true;
-    const blocks = document.querySelectorAll('.ds-markdown');
-    if (blocks.length) {
-      const last = blocks[blocks.length - 1];
-      if (last.querySelector('.ds-markdown-cursor, .blinking-cursor')) return true;
+    
+    // 1. Check for Stop/Generating icon (Square or Pause shape)
+    // DeepSeek uses M2 4.88 for the square stop button
+    if (html.includes('M2 4.88') || html.includes('ds-loading')) {
+      return true;
     }
-    if (html.includes('M8.3125')) return false;
-    const disabled = sendButton.disabled || sendButton.classList.contains('ds-icon-button--disabled') || sendButton.hasAttribute('disabled');
-    return !disabled && inputArea.value.trim() === '';
+    
+    // 2. Check for Send/Idle icon (Up Arrow)
+    // DeepSeek uses M8.3125 or M1.29297 for the up arrow
+    if (html.includes('M8.3125') || html.includes('M1.29297')) {
+      return false;
+    }
+
+    // 3. Fallback: if we see cursors or loading markers in the message area
+    const lastMarkdown = document.querySelector('.ds-markdown:last-of-type');
+    if (lastMarkdown && (lastMarkdown.querySelector('.ds-markdown-cursor') || lastMarkdown.querySelector('.ds-loading'))) {
+      return true;
+    }
+
+    // If we are not sure, we'll keep waiting (returning true) 
+    // unless we see an explicit Send button icon.
+    return true; 
   }
 
   extractResponse() {
@@ -59,9 +73,18 @@ class QwenAdapter {
 
   isGenerating(inputArea, sendButton) {
     if (!sendButton) return false;
-    if (sendButton.classList.contains('stop-button')) return true;
+    
+    // Explicit stop button
+    if (sendButton.classList.contains('stop-button') || sendButton.innerText.includes('停止') || sendButton.innerText.includes('Stop')) return true;
+    
+    // Explicit send button
+    if (sendButton.classList.contains('send-button') && !sendButton.disabled) return false;
+
+    // Loading dots or similar
+    if (document.querySelector('.ant-spin, .loading-dots')) return true;
+
     const disabled = sendButton.disabled || sendButton.hasAttribute('disabled');
-    return !disabled && inputArea.value.trim() === '';
+    return disabled;
   }
 
   extractResponse() {

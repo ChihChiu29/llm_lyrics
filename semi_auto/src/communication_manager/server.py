@@ -10,8 +10,6 @@ app = Flask(__name__)
 CORS(app)
 
 # Queue of interactions
-# Each interaction is a dict: { 'id': str, 'input_string': str, 'output_string': str, 'status': str }
-# Status can be: 'PENDING', 'RUNNING', 'COMPLETED', 'FAILED'
 interactions_queue = []
 
 # Logging setup
@@ -82,13 +80,8 @@ def peek_next_interaction():
                 print(f"Reset stuck interaction {interaction['id']} to PENDING")
                 write_log_event('TIMEOUT_RESET', interaction)
                 
-    # The "next" interaction is the first one in the queue
-    next_interaction = interactions_queue[0]
-    if next_interaction['status'] == 'PENDING':
-        return jsonify(next_interaction), 200
-    else:
-        # If the first interaction is still RUNNING and not expired, return None to keep client waiting
-        return jsonify(None), 200
+    # Return the first interaction in the queue
+    return jsonify(interactions_queue[0]), 200
 
 @app.route('/api/interaction/next', methods=['PUT'])
 def update_next_interaction():
@@ -112,9 +105,9 @@ def update_next_interaction():
         next_interaction['output_string'] = data['output_string']
         
     write_log_event(next_interaction['status'], next_interaction)
-        
-    # When completed or failed, remove from queue
-    if next_interaction['status'] in ['COMPLETED', 'FAILED']:
+    
+    # Only remove from queue when status is CONSUMED
+    if next_interaction['status'] == 'CONSUMED':
         interactions_queue.pop(0)
         
     return jsonify(next_interaction), 200
@@ -123,5 +116,12 @@ def update_next_interaction():
 def list_interactions():
     return jsonify(interactions_queue), 200
 
+@app.route('/api/interactions', methods=['DELETE'])
+def clear_interactions():
+    global interactions_queue
+    interactions_queue = []
+    print("Queue cleared")
+    return jsonify({'status': 'cleared'}), 200
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=9223, debug=True)
