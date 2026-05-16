@@ -1,25 +1,36 @@
 // content.js
-
+console.log('LLM Communication Client: Content script loaded and ready.');
 const SERVER_URL = 'http://localhost:8080';
-
-// Note: These selectors are speculative and might need updates based on DeepSeek's exact DOM structure.
-const SELECTORS = {
-  chatInput: '#chat-input', // Update this based on actual DeepSeek UI
-  sendButton: '.ds-icon-button', // Update this based on actual DeepSeek UI (the send icon)
-  responseBlocks: '.ds-markdown', // Update this based on actual DeepSeek UI
-  stopGeneratingButton: '.ds-stop-generating' // To detect if it's still running
-};
 
 let currentInteraction = null;
 let checkInterval = null;
+let adapter = null;
+
+// Initialize adapter
+function initAdapter() {
+  const hostname = window.location.hostname;
+  const adapterDef = window.LLM_ADAPTERS.find(def => def.matches(hostname));
+  if (adapterDef) {
+    adapter = new adapterDef.AdapterClass();
+    console.log(`Initialized adapter for ${adapter.name}`);
+  } else {
+    console.error('No suitable adapter found for this webpage.');
+  }
+}
+
+initAdapter();
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'process_interaction') {
+    if (!adapter) {
+      console.error('Cannot process interaction without an adapter.');
+      sendResponse({ received: false, error: 'No adapter' });
+      return;
+    }
     currentInteraction = message.interaction;
     processInteraction(currentInteraction);
     sendResponse({ received: true });
   }
-  return true;
 });
 
 async function processInteraction(interaction) {
@@ -33,8 +44,8 @@ async function processInteraction(interaction) {
       body: JSON.stringify({ status: 'RUNNING' })
     });
 
-    // 2. Input text into DeepSeek UI
-    const inputArea = document.querySelector(SELECTORS.chatInput);
+    // 2. Input text into UI
+    const inputArea = adapter.getChatInput();
     if (!inputArea) {
       throw new Error('Chat input not found');
     }
@@ -45,14 +56,14 @@ async function processInteraction(interaction) {
 
     // Wait a brief moment before clicking send
     setTimeout(() => {
-      const sendButton = document.querySelector(SELECTORS.sendButton);
-      if (sendButton && !sendButton.disabled) {
+      const sendButton = adapter.getSendButton(inputArea);
+      if (sendButton) {
         sendButton.click();
         
         // 3. Periodically check if response is ready (every 10 seconds)
         checkInterval = setInterval(checkResponseReady, 10000);
       } else {
-        throw new Error('Send button not found or disabled');
+        throw new Error('Send button not found');
       }
     }, 500);
 
@@ -63,14 +74,12 @@ async function processInteraction(interaction) {
 }
 
 function checkResponseReady() {
-  // A heuristic to check if it's still generating:
-  // Usually there's a "stop generating" button or the send button is disabled.
-  const isGenerating = document.querySelector(SELECTORS.stopGeneratingButton) !== null;
-  const sendButton = document.querySelector(SELECTORS.sendButton);
-  const isSendDisabled = sendButton && sendButton.disabled;
-  
-  // If it's not generating and the send button is available again, it should be done.
-  if (!isGenerating && !isSendDisabled) {
+  const inputArea = adapter.getChatInput();
+  if (!inputArea) return;
+
+  const sendButton = adapter.getSendButton(inputArea);
+
+  if (!adapter.isGenerating(inputArea, sendButton)) {
     clearInterval(checkInterval);
     extractAndSubmitResponse();
   }
@@ -78,15 +87,7 @@ function checkResponseReady() {
 
 async function extractAndSubmitResponse() {
   try {
-    // Get all response blocks
-    const responseBlocks = document.querySelectorAll(SELECTORS.responseBlocks);
-    if (responseBlocks.length === 0) {
-      throw new Error('No responses found on the page');
-    }
-
-    // Extract the text from the last response block
-    const lastResponse = responseBlocks[responseBlocks.length - 1];
-    const responseText = lastResponse.innerText;
+    const responseText = adapter.extractResponse();
 
     // 4. Update the interaction with the response and set status to COMPLETED
     await fetch(`${SERVER_URL}/api/interaction/next`, {
