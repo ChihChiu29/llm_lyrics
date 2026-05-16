@@ -7,10 +7,10 @@ class CommunicationClient:
     def __init__(self, base_url="http://localhost:8080"):
         self.base_url = base_url
         
-    def add_interaction(self, input_string):
+    def add_interaction(self, input_string, client="deepseek"):
         response = requests.post(
             f"{self.base_url}/api/interaction",
-            json={"input_string": input_string}
+            json={"input_string": input_string, "client": client}
         )
         response.raise_for_status()
         return response.json()
@@ -48,6 +48,7 @@ def main():
     # Add command
     parser_add = subparsers.add_parser("add", help="Add a new interaction")
     parser_add.add_argument("input_string", help="Input text for the interaction")
+    parser_add.add_argument("--client", default="deepseek", help="Target client (deepseek, chatgpt, claude, qwen)")
     
     # Peek command
     parser_peek = subparsers.add_parser("peek", help="Peek the next interaction")
@@ -63,6 +64,7 @@ def main():
     # Wait command
     parser_wait = subparsers.add_parser("wait", help="Add interaction and wait for response")
     parser_wait.add_argument("input_string", help="Input text for the interaction")
+    parser_wait.add_argument("--client", default="deepseek", help="Target client (deepseek, chatgpt, claude, qwen)")
     parser_wait.add_argument("--timeout", type=int, default=120, help="Timeout in seconds")
     
     args = parser.parse_args()
@@ -70,7 +72,7 @@ def main():
     
     try:
         if args.command == "add":
-            res = client.add_interaction(args.input_string)
+            res = client.add_interaction(args.input_string, client=args.client)
             print(json.dumps(res, indent=2))
             
         elif args.command == "peek":
@@ -86,9 +88,9 @@ def main():
             print(json.dumps(res, indent=2))
             
         elif args.command == "wait":
-            res = client.add_interaction(args.input_string)
+            res = client.add_interaction(args.input_string, client=args.client)
             interaction_id = res['id']
-            print(f"Added interaction: {interaction_id}")
+            print(f"Added interaction: {interaction_id} for client: {args.client}")
             print("Waiting for response...")
             
             start_time = time.time()

@@ -35,7 +35,8 @@ def write_log_event(event_type, interaction):
                     # truncate long messages for readability
                     if len(msg) > 50: msg = msg[:47] + '...'
                     
-                    log_line = f"[{ts}] {log['event_type']:<15} ID: {log['interaction']['id']} | Msg: {msg}\n"
+                    log_line = f"[{ts}] {log['event_type']:<15} ID: {log['interaction']['id']} | Client: {log['interaction'].get('client', 'deepseek')} | Msg: {msg}\n"
+
                     
                     if log['event_type'] == 'COMPLETED' and log['interaction'].get('output_string'):
                         out_msg = log['interaction']['output_string']
@@ -57,6 +58,7 @@ def add_interaction():
     interaction_id = str(uuid.uuid4())
     interaction = {
         'id': interaction_id,
+        'client': data.get('client', 'deepseek'),
         'input_string': data['input_string'],
         'output_string': None,
         'status': 'PENDING'
@@ -64,7 +66,7 @@ def add_interaction():
     
     interactions_queue.append(interaction)
     write_log_event('NEW', interaction)
-    return jsonify({'id': interaction_id, 'status': interaction['status']}), 201
+    return jsonify({'id': interaction_id, 'status': interaction['status'], 'client': interaction['client']}), 201
 
 @app.route('/api/interaction/next', methods=['GET'])
 def peek_next_interaction():

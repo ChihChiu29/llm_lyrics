@@ -10,60 +10,69 @@ class DeepSeekAdapter {
   }
 
   getSendButton(inputArea) {
-    const parentContainer = inputArea.closest('div').parentElement;
-    if (parentContainer) {
-      const buttons = parentContainer.querySelectorAll('div[role="button"]');
-      if (buttons.length > 0) {
-        return buttons[buttons.length - 1];
-      }
+    const parent = inputArea.closest('div').parentElement;
+    if (parent) {
+      const buttons = parent.querySelectorAll('div[role="button"]');
+      return buttons.length ? buttons[buttons.length - 1] : null;
     }
     return null;
   }
 
   isGenerating(inputArea, sendButton) {
     if (!sendButton) return false;
-    
     const html = sendButton.innerHTML;
-    
-    // 1. Check if the button shows the "Stop" square icon (M2 4.88...) or a loading spinner
-    if (html.includes('M2 4.88') || html.includes('ds-loading')) {
-      return true;
+    if (html.includes('M2 4.88') || html.includes('ds-loading')) return true;
+    const blocks = document.querySelectorAll('.ds-markdown');
+    if (blocks.length) {
+      const last = blocks[blocks.length - 1];
+      if (last.querySelector('.ds-markdown-cursor, .blinking-cursor')) return true;
     }
-    
-    // 2. Check if there's a blinking cursor in the last message block
-    const responseBlocks = document.querySelectorAll('.ds-markdown');
-    if (responseBlocks.length > 0) {
-      const lastBlock = responseBlocks[responseBlocks.length - 1];
-      if (lastBlock.querySelector('.ds-markdown-cursor, .blinking-cursor')) {
-        return true;
-      }
-    }
-    
-    // 3. If the button shows the "Send" up-arrow (M8.3125...), it's definitely finished or idle
-    if (html.includes('M8.3125')) {
-      return false;
-    }
-
-    // Fallback: If not disabled and textarea is empty, it might still be generating
-    const isSendDisabled = sendButton.disabled || sendButton.classList.contains('ds-icon-button--disabled') || sendButton.hasAttribute('disabled');
-    return !isSendDisabled && inputArea.value.trim() === '';
+    if (html.includes('M8.3125')) return false;
+    const disabled = sendButton.disabled || sendButton.classList.contains('ds-icon-button--disabled') || sendButton.hasAttribute('disabled');
+    return !disabled && inputArea.value.trim() === '';
   }
 
   extractResponse() {
-    const responseBlocks = document.querySelectorAll('div.ds-markdown.ds-assistant-message-main-content, .ds-markdown');
-    if (responseBlocks.length === 0) {
-      throw new Error('No responses found on the page');
-    }
-    // Extract the text from the last response block
-    const lastResponse = responseBlocks[responseBlocks.length - 1];
-    return lastResponse.innerText;
+    const blocks = document.querySelectorAll('div.ds-markdown.ds-assistant-message-main-content, .ds-markdown');
+    if (!blocks.length) throw new Error('No responses found on the page');
+    return blocks[blocks.length - 1].innerText;
   }
 }
 
-// Global window object to expose to content.js
-window.LLM_ADAPTERS = [
-  {
-    matches: (hostname) => hostname.includes('chat.deepseek.com'),
-    AdapterClass: DeepSeekAdapter
+class QwenAdapter {
+  constructor() {
+    this.name = 'Qwen';
   }
+
+  getChatInput() {
+    return document.querySelector('textarea.message-input-textarea');
+  }
+
+  getSendButton(inputArea) {
+    const parent = inputArea.closest('div').parentElement;
+    if (parent) {
+      const btn = parent.querySelector('button.send-button') || parent.querySelector('button.stop-button');
+      return btn || null;
+    }
+    return null;
+  }
+
+  isGenerating(inputArea, sendButton) {
+    if (!sendButton) return false;
+    if (sendButton.classList.contains('stop-button')) return true;
+    const disabled = sendButton.disabled || sendButton.hasAttribute('disabled');
+    return !disabled && inputArea.value.trim() === '';
+  }
+
+  extractResponse() {
+    const blocks = document.querySelectorAll('.qwen-chat-message-assistant');
+    if (!blocks.length) throw new Error('No responses found on the page');
+    return blocks[blocks.length - 1].innerText;
+  }
+}
+
+// Expose adapters to content script
+window.LLM_ADAPTERS = [
+  { matches: (hostname) => hostname.includes('chat.deepseek.com'), AdapterClass: DeepSeekAdapter },
+  { matches: (hostname) => hostname.includes('qwen.ai'), AdapterClass: QwenAdapter }
 ];

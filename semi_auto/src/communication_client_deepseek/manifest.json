@@ -19,7 +19,12 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://chat.deepseek.com/*"],
+      "matches": [
+        "*://chat.deepseek.com/*",
+        "*://chatgpt.com/*",
+        "*://claude.ai/*",
+        "*://*.qwen.ai/*"
+      ],
       "js": ["adapters.js", "content.js"],
       "run_at": "document_idle"
     }

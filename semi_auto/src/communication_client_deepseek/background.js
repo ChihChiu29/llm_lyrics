@@ -5,6 +5,13 @@ let isProcessing = false;
 let processingTimeout = null;
 let enabledTabIds = new Set();
 
+const CLIENT_URL_MAP = {
+  'deepseek': '*://chat.deepseek.com/*',
+  'chatgpt': '*://chatgpt.com/*',
+  'claude': '*://claude.ai/*',
+  'qwen': '*://*.qwen.ai/*'
+};
+
 function setProcessing(state) {
   isProcessing = state;
   if (state) {
@@ -120,9 +127,17 @@ async function pollServer() {
 
 async function startProcessing(interaction) {
   setProcessing(true);
+  const targetClient = (interaction.client || 'deepseek').toLowerCase();
+  const targetUrl = CLIENT_URL_MAP[targetClient];
   
-  // Find a supported tab. For now, we only have the DeepSeek adapter implemented.
-  chrome.tabs.query({ url: ["*://chat.deepseek.com/*"] }, async (tabs) => {
+  if (!targetUrl) {
+    console.error(`Unknown client requested: ${targetClient}`);
+    setProcessing(false);
+    return;
+  }
+  
+  // Find a supported tab for the requested client
+  chrome.tabs.query({ url: [targetUrl] }, async (tabs) => {
     // Filter to only ENABLED tabs
     const activeTabs = tabs.filter(t => enabledTabIds.has(t.id));
     

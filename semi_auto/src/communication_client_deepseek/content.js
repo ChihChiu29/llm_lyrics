@@ -20,11 +20,19 @@ function initAdapter() {
 
 initAdapter();
 
+// Listen for messages from background script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'process_interaction') {
     if (!adapter) {
       console.error('Cannot process interaction without an adapter.');
       sendResponse({ received: false, error: 'No adapter' });
+      return;
+    }
+    // Ensure the interaction is intended for this client
+    if (message.interaction && message.interaction.client &&
+        message.interaction.client.toLowerCase() !== adapter.name.toLowerCase()) {
+      console.warn('Interaction client mismatch (', message.interaction.client, ') vs adapter', adapter.name);
+      sendResponse({ received: false, error: 'Client mismatch' });
       return;
     }
     currentInteraction = message.interaction;

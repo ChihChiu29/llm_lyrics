@@ -4,9 +4,13 @@ Create a communication manager http server to manage tasks between chrome extens
 # Design
 The communication manager holds a queue of communication interactions. An "interaction" has:
 - A unique id
+- A client (target platform, e.g., deepseek, chatgpt)
 - An input string
 - An output string
 - A status, among {PENDING, RUNNING, COMPLETED, FAILED}
+- A running_since timestamp (for server-side timeout resets)
+
+The server also maintains a persistent, rolling log (`server_log.txt`) capped at 1000 entries to record all state changes and completed responses.
 
 The server provides APIs for:
 
