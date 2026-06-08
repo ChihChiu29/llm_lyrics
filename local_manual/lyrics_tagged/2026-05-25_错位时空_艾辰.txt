@@ -1,0 +1,77 @@
+错位时空 艾辰
+
+[Genre: Synth-Pop Ballad | Energy: Low-Medium | Vocals: Male, Breathy Tenor | Instrumentation: Echoing Synth Pads, Subtle Drum Machine]
+填不满半排观众的电影
+直到散场时突然亮起灯
+字幕定格在某某出品和发行
+我目送 他们行色匆匆
+
+[Genre: Indie Folk | Energy: Medium-Low | Vocals: Narrative, Introspective | Instrumentation: Acoustic Guitar Fingerpicking, Sparse Bassline]
+像个自不量力的复读生
+完不成金榜题名的使命
+命不是猜剪刀石头布的决定
+那么任性
+
+[Genre: Dream Pop | Energy: Medium | Vocals: Harmonic, Yearning | Instrumentation: Reverb-drenched Electric Guitar, Lush Strings, Gentle Synth Arpeggios]
+我吹过你吹过的晚风
+那我们算不算 相拥
+可如梦初醒般的两手空空
+心也空
+
+[Genre: Alternative Pop | Energy: Medium-Low | Vocals: Soft, Questioning | Instrumentation: Delay-heavy Piano, Subtle Pad Swells, Ambient Sound Effects]
+我吹过你吹过的晚风
+是否看过同样 风景
+像扰乱时差留在错位时空
+终是空 是空
+
+[Genre: Cinematic Pop | Energy: Medium | Vocals: Melancholy, Concerned | Instrumentation: Pumping Heartbeat Synth Rhythm, Pizzicato Strings, Sparse Percussion]
+数不完见证许愿的繁星
+没灵验谁来安慰坏心情
+十字路口闪烁不停的信号灯
+有个人 显然心事重重
+
+[Genre: R&B Ballad | Energy: Build-up | Vocals: Whisper, Vulnerable | Instrumentation: Deep Sub Bass, Minimal Drums, Filtered Choir Samples]
+三个字 只能说给自己听
+仰着头不要让眼泪失控
+哪里有可以峰回路转的宿命
+我不想听
+
+[Genre: Dream Pop | Energy: Medium | Vocals: Harmonic, Yearning | Instrumentation: Reverb-drenched Electric Guitar, Lush Strings, Gentle Synth Arpeggios]
+我吹过你吹过的晚风
+那我们算不算 相拥
+可如梦初醒般的两手空空
+心也空
+
+[Genre: Alternative Pop | Energy: Medium-Low | Vocals: Soft, Questioning | Instrumentation: Delay-heavy Piano, Subtle Pad Swells, Ambient Sound Effects]
+我吹过你吹过的晚风
+是否看过同样 风景
+像扰乱时差留在错位时空
+终是空 是空
+
+[Genre: Orchestral Pop | Energy: High | Vocals: Full Chest Voice, Dramatic | Instrumentation: Sweeping Orchestral Strings, Powerful Synth Chord Progression, Cinematic Drums]
+我吹过你吹过的晚风
+空气里弥漫着 心痛
+可我们 最后 在这错位时空
+终成空
+
+[Genre: Synth-Pop Ballad | Energy: Medium-High | Vocals: Resigned, Emotional Peak | Instrumentation: Arpeggiated Synth Lead, Driving Synth Bass, Emotional String Crescendo]
+我吹过你吹过的晚风
+空气里弥漫着 心痛
+可我们 最后 在这错位时空
+终成空 成空
+
+=== Suggested Styles ===
+
+- **Genre:** Cinematic Synthwave Ballad. **BPM:** 90 BPM. **Vocals:** Male, breathy tenor, highly emotive, delivered with restrained desperation. **Instrumentation:** Massive, echoing synth pads with LFO modulation, driving yet restrained four-on-the-floor kick drum, arpeggiated synth lead playing a repetitive, yearning motif, subtle pizzicato string counter-melodies. **Atmosphere:** Vast, neon-lit, and temporally warped, evoking the feeling of watching a scene play out in a dream sequence.
+
+- **Genre:** Minimalist R&B Soul. **BPM:** 75 BPM. **Vocals:** Whisper-sung, vulnerable, intimate, with heavy use of vocal ad-libs and restrained falsetto. **Instrumentation:** Deep, oscillating sub-bass line that drives the rhythm, extremely sparse, trap-influenced hi-hats, a heavily filtered Rhodes electric piano playing melancholic chords, and sampled, reverberating choir pads used sparingly for texture. **Atmosphere:** Confessional, smoky, and deeply personal, like whispering secrets in a late-night studio.
+
+- **Genre:** Ethereal Dream Pop. **BPM:** 80 BPM. **Vocals:** Harmonic, soaring, layered with multiple reverb tracks, sounding distant and hazy. **Instrumentation:** Crystal-clear, heavily delayed electric guitar playing fingerpicked melodies, lush, sustained string sections (violins and cellos), gentle, evolving synth washes (like slow-moving fog), and finger snaps used as rhythmic anchors. **Atmosphere:** Weightless, nostalgic, and profoundly beautiful, like remembering a perfect moment that never truly existed.
+
+- **Genre:** Alternative Indie Pop. **BPM:** 105 BPM. **Vocals:** Questioning, slightly strained, delivered with an urgent, conversational rhythm. **Instrumentation:** Delay-heavy, lo-fi piano chords that bounce off the walls, a subtle, syncopated drum machine groove (think gated reverb), filtered analog synth swells that build tension, and occasional bursts of distorted, treated sound effects (like distant train whistles or radio static). **Atmosphere:** Anxious, restless, and urban, capturing the feeling of being lost in a crowded but emotionally empty space.
+
+- **Genre:** Epic Orchestral Pop Anthem. **BPM:** 120 BPM. **Vocals:** Full chest voice, powerful, building from a controlled whisper to a dramatic, sustained belt. **Instrumentation:** Sweeping, full orchestral string section (rising crescendos are key), powerful, cinematic timpani rolls and massive toms, a punchy, soaring synth chord progression that acts as the emotional backbone, and dramatic brass swells that hit on key lyrical moments. **Atmosphere:** Cathartic, monumental, and overwhelmingly grand, suggesting a massive realization or emotional breaking point.
+
+=== Metadata ===
+Model: gemma4:e4b
+Saved At: 2026-05-25 18:17:51

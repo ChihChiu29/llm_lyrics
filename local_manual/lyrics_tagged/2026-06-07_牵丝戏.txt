@@ -1,0 +1,54 @@
+牵丝戏
+
+[Intro & Verse 1 | Theatical Tension Building | Intimate Mezzo-Soprano with Puppeteer Vocal Filter | Solo Guqin Plucks, Crisp Wind Chimes, Sub-Bass Drone]
+嘲笑誰恃美揚威 沒了心如何相配
+盤鈴聲清脆 帷幕間燈火幽微
+我和你 最天生一對
+
+[Verse 2 | Emotional Contrast & Dark Undertone | Dual Vocal Layering with Shadow Harmony | Traditional Dizi Flute Entering, Woodblock Percussion, Silk Texture Foley]
+沒了你才算原罪 沒了心才好相配
+你襤褸我彩繪 並肩行過山與水
+你憔悴 我替你明媚
+
+[Pre-Chorus | Rising Passion & Narrative Drive | Belting with Vibrato Control, Overdubbed Choral Pads | Pipa Tremolo Arpeggios, String Section Swells, Cinematic Cymbal Crash]
+是你吻開筆墨 染我眼角珠淚
+演離合相遇悲喜為誰
+他們迂迴誤會 我卻只由你支配
+問世間哪有更完美
+
+[Chorus | Peak Melodic Catharsis & Ethereal Grandeur | Soaring Falsetto with Ghostly Echo Reverb | Full Orchestra, Erhu Solo Weaving Through Synth Pads, Resonant Gong Hits]
+蘭花指捻紅塵似水
+三尺紅台 萬事入歌吹
+唱別久悲不成悲 十分紅處竟成灰
+願誰記得誰 最好的年歲
+
+[Verse/Interlude | Devoted Surrender & Rhythmic Pulse | Tight Percussive Vocals, Staccato Delivery | Guzheng Rapid Runs, Taiko Drums Syncopated, Metallic String Bows]
+你一牽我舞如飛 你一引我懂進退
+苦樂都跟隨 舉手投足不違背
+將謙卑 溫柔成絕對
+
+[Bridge/Climax Build | Turbulent Conflict & Inner Fire | Raw Unfiltered Voice Cracking into Power, Call-and-Response Choir | Distorted Electric Guzheng, Thunderous Bass Drops, Glass Shatter FX, Heartbeat Pulse]
+你錯我不肯對 你懵懂我矇昧
+心火怎甘心揚湯止沸
+你枯我不曾萎 你倦我也不敢累
+用什麼暖你一千歲
+
+[Chorus/Outro Finale | Melancholic Resolution & Timeless Fade | Whispered Intimacy Merging into Distant Choral Humming | Solo Erhu Fading, Wind Howling through Abandoned Stage, Crickets, Final Silk Snap]
+風雪依稀秋白髮尾
+燈火葳蕤 揉皺你眼眉
+假如你捨一滴淚 假如老去我能陪
+煙波里成灰 也去得完美
+風雪依稀秋白髮尾
+燈火葳蕤 揉皺你眼眉
+假如你捨一滴淚 假如老去我能陪
+煙波里成灰 也去得完美
+
+=== Suggested Styles ===
+
+- Theatrical Trap-Puppeteer Fusion | 78 BPM | Intimate mezzo-soprano rap verses with subtle metallic puppeteer filter and breathy proximity mic technique, transitioning to soaring falsetto chorus with ghostly plate reverb and delayed vocal stacks | Traditional guqin plucks layered over crisp sub-bass drone, woodblock percussion synced to hi-hat triplets, dizi flute entering in Verse 2 with microtonal bends, pipa tremolo arpeggios driving Pre-Chorus tension, full string section swelling into cinematic cymbal crashes, erhu solo weaving through warm analog synth pads | Spatial atmosphere: vast abandoned theater stage with long natural reverb tails (4.5s decay), distant wind chimes panning left-to-right, silk texture foley brushing against microphone diaphragm, resonant gong hits triggering low-end sub drops, final outro fades into crickets and a single silk snap with vinyl crackle bed | Modern Chinese hip-hop meets dark theatrical trap, emotional contrast between devotion and surrender, precise rhythmic pulse matching puppeteer choreography.
+
+- Cinematic Neo-Classical Hip-Hop | 85 BPM | Soulful baritone rap delivery with tight percussive phrasing and shadow harmony dual-layering (close-mic lead + distant octave-down pad), belting pre-chorus with controlled vibrato and overdubbed choral pads, raw unfiltered voice cracking into power during bridge call-and-response sections | Distorted electric guzheng playing rapid staccato runs over syncopated taiko drums, deep 808 sub-bass
+
+=== Metadata ===
+Model: hf.co/unsloth/Qwen3.6-27B-GGUF:UD-Q2_K_XL
+Saved At: 2026-06-07 11:37:28

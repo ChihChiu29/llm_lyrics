@@ -1,0 +1,60 @@
+赤伶
+
+[Tempo: Slow to moderate] [Energy: Melancholic, dramatic reflection] [Vocals: Female operatic soprano with ethereal texture] [Instrumentation: Guzheng arpeggios, subtle Erhu backing, sparse piano chords]
+台下人走過 不見舊顏色
+台上人唱著 心碎離別歌
+情字難落墨 她唱須以血來和
+戲幕起 戲幕落 誰是客
+
+[Tempo: Moderato with strong rhythm] [Energy: Intense, theatrical despair] [Vocals: Powerful mezzo-soprano belt, highly emotive vibrato] [Instrumentation: Dramatic drum beats (Gongs/Drums), soaring strings, full orchestra build-up, water drop sound effects]
+戲一折 水袖起落
+唱悲歡唱離合 無關我
+扇開合 鑼鼓響又默
+戲中情戲外人 憑誰說
+
+[Tempo: Measured and weighty] [Energy: Epic sorrow, defiant resilience] [Vocals: Full, dramatic belt with controlled vibrato, highly narrative tone] [Instrumentation: Orchestral swell, deep male chorus backing (subtle), heavy percussion accents, dramatic Chinese motifs]
+慣將喜怒哀樂都融入粉墨
+陳詞唱穿又如何 白骨青灰皆我
+亂世浮萍忍看烽火燃山河
+位卑未敢忘憂國 哪怕無人知我
+
+[Tempo: Slow and intimate] [Energy: Heightened sense of loss, resigned dramatic flair] [Vocals: Tender operatic delivery, building intensity on key phrases] [Instrumentation: Solo dizi flute melody, sparse piano chords, subtle strings entering, gentle rhythm section]
+台下人走過 不見舊顏色
+台上人唱著 心碎離別歌
+情字難落墨 她唱須以血來和
+戲幕起 戲幕落 誰是客
+
+[Tempo: Slightly faster, agitated] [Energy: Urgent introspection, dramatic climax build-up] [Vocals: Full power, slightly strained vocal texture conveying exhaustion] [Instrumentation: Faster, intricate percussion patterns (bamboo clappers), rising strings motif, diminished chords, accelerating rhythm]
+慣將喜怒哀樂都藏入粉墨
+陳詞唱穿又如何 白骨青灰皆我
+亂世浮萍忍看烽火燃山河
+位卑未敢忘憂國 哪怕無人知我
+
+[Tempo: Very slow and expansive] [Energy: Grand, melancholic acceptance, fading grandeur] [Vocals: Soaring high notes, ethereal whisper on the last line] [Instrumentation: Full cinematic orchestra crescendo, then dissipating into single Guzheng strumming, echoing reverb]
+台下人走過 不見舊顏色
+臺上人唱著 心碎離別歌
+情字難落墨 她唱須以血來和
+戲幕起 戲幕落 終是客
+
+[Tempo: Dramatic, steady march rhythm] [Energy: Assertive, philosophical defiance, catharsis] [Vocals: Strong, commanding belt (alternating male/female voices implied) fading to soft spoken word] [Instrumentation: Military-style brass fanfare (subtle), powerful rhythmic drums, sweeping cinematic strings, final sustained chord resolution]
+你方唱罷我登場
+莫嘲風月戲 莫笑人荒唐
+也曾問青黃 也曾鏗鏘唱興亡
+道無情 道有情 怎思量
+道無情 道有情 費思量
+
+=== Suggested Styles ===
+
+- **Genre: Cinematic Orchestral Trap / Trip-Hop Fusion** | **BPM: 80-90 BPM** | **Vocals: Deep, resonant baritone rap with highly dramatic ad-libs; occasional sampled operatic vocal snippets used as texture.** | **Instrumentation:** Massive sub-bass drops (808s) layered beneath sweeping, melancholic cinematic strings. Samples of Guzheng arpeggios and Erhu are heavily processed with reverb and delay effects, creating a vast, ethereal soundscape. The beat structure should be half-time, emphasizing dramatic pauses and sudden percussion swells (like deep Taiko drums mixed into the trap hi-hats). Focus on building tension through orchestral crescendos that drop abruptly back into sparse, echoing beat pockets. *This style captures the epic scope and melancholic grandeur of the original opera while grounding it in modern, cinematic hip-hop.*
+
+- **Genre: Underground Boom Bap / Neo-Soul Storytelling Rap** | **BPM: 75 BPM** | **Vocals: Intimate, conversational tenor rap with a soulful, reflective texture; vocal delivery should be highly narrative and poetic.** | **Instrumentation:** Warm, dusty vinyl sample loops (like old jazz records) mixed with subtle traditional Chinese instruments. The primary beat uses crisp, jazzy drum breaks (think boom bap), punctuated by deep kick drums. A Rhodes piano or warm Wurlitzer electric piano provides the harmonic foundation. Use a prominent, smooth bass line that drives the song forward. Incorporate sampled Dizi flute melodies as counter-melodies during the verses, giving it an academic, reflective, and deeply introspective feel (similar to J. Cole meets traditional Asian cinema soundtracks).
+
+- **Genre: Industrial Dark Trap / Experimental Hip-Hop** | **BPM: 135 BPM (Half-time feel)** | **Vocals: Aggressive, distorted rap flow with layered whispers and spoken word passages; vocal texture should sound strained or exhausted.** | **Instrumentation:** Heavy, metallic percussion samples (industrial clangs, chains, ticking clocks) mixed with deep, unsettling sub-bass. The overall atmosphere is cold and dramatic. Use heavily filtered, processed vocal chops of the original operatic lines as rhythmic elements throughout the beat. Incorporate sampled water drop sounds and scraping metal noises to enhance the sense of decay and despair. The arrangement should feel cyclical and relentlessly building towards a cathartic, yet dark, climax.
+
+- **Genre: Trap Metal / Hardcore Rap Fusion** | **BPM: 145 BPM** | **Vocals: Powerful, shouted rap verses with rapid articulation; includes dramatic operatic belt samples used as powerful, punctuating background screams.** | **Instrumentation:** Blending massive, distorted guitar riffs (like Drop-Tuning) and heavy trap drums (aggressive hi-hat rolls, huge kicks). The beat should feel urgent and highly aggressive. Use sampled Chinese military brass fanfare motifs to replace or augment the traditional synth leads, giving the sound a sense of martial defiance. Focus on complex rhythmic interplay between the powerful rap flow and the driving, almost overwhelming weight of the metal instrumentation.
+
+- **Genre: Lo-Fi Hip-Hop / Ambient Oriental Chill** | **BPM: 65 BPM (very slow)** | **Vocals: Soft, melodic spoken word rap; delivered with a resigned, poetic whisper; minimal vocal projection but maximum emotional impact.** | **Instrumentation:** Extremely mellow and lo-fi production quality. The core elements are heavily reverberated Guzheng fingerpicking loops that drift in and out of the mix. Use subtle, breathy field recordings (wind, distant crowds) to establish atmosphere. The beat is extremely sparse—just a soft kick drum on 1 and 3, and gentle, filtered vinyl crackle. This style emphasizes vulnerability, loss, and deep contemplation, allowing the lyrical weight to carry the entire track without aggressive beats.
+
+=== Metadata ===
+Model: gemma4:e4b
+Saved At: 2026-06-06 23:18:03
