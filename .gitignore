@@ -1,6 +1,6 @@
 __pycache__
 tmp_*
 .env
-
+taggingv2/tmp/*
 
 server_log.*

@@ -1,0 +1,60 @@
+牽絲戲
+
+[Intro, Ethereal Atmosphere, Haunting Female Vocals, Pipa and Bamboo Flute, Soft Reverb]
+嘲笑誰恃美揚威 沒了心如何相配
+盤鈴聲清脆 帷幕間燈火幽微
+我和你 最天生一對
+
+[Verse, Building Tension, Melancholic Storytelling Vocals, Cello and Guzheng, Cinematic Strings]
+沒了你才算原罪 沒了心才好相配
+你襤褸我彩繪 並肩行過山與水
+你憔悴 我替你明媚
+
+[Chorus, High Energy, Emotional Belting Vocals, Orchestral Explosion, Heavy Taiko Drums, Piercing Erhu Solo]
+是你吻開筆墨 染我眼角珠淚
+演離合相遇悲喜為誰
+他們迂迴誤會 我卻只由你支配
+問世間哪有更完美
+
+[Bridge, Poetic Slowdown, Delicate Airy Vocals, Traditional Chinese Percussion, Minimalist Woodwinds]
+蘭花指捻紅塵似水
+三尺紅台 萬事入歌吹
+唱別久悲不成悲 十分紅處竟成灰
+願誰記得誰 最好的年歲
+
+[Dynamic Movement, Mid-Tempo, Fluid Graceful Vocals, Rapid Pipa Plucking, Swelling Strings]
+你一牽我舞如飛 你一引我懂進退
+苦樂都跟隨 舉手投足不違背
+將謙卑 溫柔成絕對
+
+[Pre-Chorus, Intense Build, Passionate Powerful Vocals, Rising Orchestral Swell, Driving Percussion]
+你錯我不肯對 你懵懂我矇昧
+心火怎甘心揚湯止沸
+你枯我不曾萎 你倦我也不敢累
+用什麼暖你一千歲
+
+[Grand Finale, Epic Scale, Soaring Operatic Vocals, Full Cinematic Orchestra, Fading to Silence, Lingering Erhu Echo]
+風雪依稀秋白髮尾
+燈火葳蕤 揉皺你眼眉
+假如你捨一滴淚 假如老去我能陪
+煙波里成灰 也去得完美
+風雪依稀秋白髮尾
+燈火葳蕤 揉皺你眼眉
+假如你捨一滴淚 假如老去我能陪
+煙波里成灰 也去得完美
+
+=== Suggested Styles ===
+
+- Cinematic Orchestral Trap, 85 BPM, Heavy Taiko drum hits, piercing Erhu solos, rapid Pipa plucking patterns, deep sub-bass, dramatic string swells, haunting female rap vocals with raspy texture, emotional belting in chorus, grand cinematic atmosphere, wide stereo imaging, reverb-drenched transitions.
+
+- Ethereal Cloud Rap, 140 BPM (half-time feel), airy and ghostly bamboo flute melodies, lush Guzheng arpeggios, lo-fi hip-hop textures, dreamy synth pads, fluid melodic rap flow, soulful and breathy vocal delivery, shimmering reverb, misty and melancholic spatial depth.
+
+- Dark Traditional Fusion Hip-Hop, 90 BPM, aggressive Pipa shredding, gritty Cello layers, hard-hitting boom-bap percussion mixed with traditional Chinese cymbals, intense storytelling rap style, passionate high-energy vocals, cinematic tension, sharp transients, echoing woodwind accents.
+
+- Epic Operatic Rap, 75 BPM, majestic full orchestral backing, soaring operatic vocal peaks during finale, heavy brass stabs, weeping Erhu melodies, slow and powerful lyrical delivery, dramatic dynamic shifts from minimalist to maximalist, vast hall acoustics, tragic and grand mood.
+
+- Poetic Lo-Fi Storytelling, 80 BPM, minimalist woodwinds, soft piano sprinkles, muffled kick drums, dusty vinyl crackle, intimate and raspy spoken-word rap style, delicate airy harmonies in bridge, warm analog saturation, close-mic vocal texture, lonely and nostalgic atmosphere.
+
+=== Metadata ===
+Model: hf.co/unsloth/gemma-4-12b-it-GGUF:Q5_K_M
+Saved At: 2026-06-07 22:00:13
