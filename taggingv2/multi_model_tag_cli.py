@@ -4,7 +4,9 @@ import sys
 import datetime
 import json
 import math
+import time
 from agent_utils import Spinner, OllamaClient, handle_rich_input
+
 
 class MultiModelTagCLI:
     def __init__(self):
@@ -88,7 +90,7 @@ class MultiModelTagCLI:
                 pass
         return None
 
-    def save_session(self, song_title, lyrics_original, selected_models, generated_styles, style_records, completed=False):
+    def save_session(self, song_title, lyrics_original, selected_models, generated_styles, style_records, timings=None, completed=False):
         if not os.path.exists("tmp"):
             os.makedirs("tmp")
         state = {
@@ -97,6 +99,7 @@ class MultiModelTagCLI:
             "selected_models": selected_models,
             "generated_styles": generated_styles,
             "style_records": style_records,
+            "timings": timings,
             "completed": completed
         }
         try:
@@ -104,6 +107,7 @@ class MultiModelTagCLI:
                 json.dump(state, f, ensure_ascii=False, indent=2)
         except Exception as e:
             print(f"{self.C_YELLOW}警告: 保存临时状态失败: {e}{self.C_RESET}")
+
 
     def load_session(self):
         path = os.path.join("tmp", "last_session.json")
@@ -197,6 +201,13 @@ class MultiModelTagCLI:
                 selected_models = session['selected_models']
                 generated_styles = session['generated_styles']
                 style_records = session['style_records']
+                timings = session.get('timings', {})
+                if not isinstance(timings, dict):
+                    timings = {}
+                if "generation" not in timings: timings["generation"] = {}
+                if "scoring" not in timings: timings["scoring"] = {}
+                if "session_created_at" not in timings:
+                    timings["session_created_at"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 print(f"{self.C_GREEN}已恢复前次会话。{self.C_RESET}")
             else:
                 self.clear_session()
@@ -242,7 +253,12 @@ class MultiModelTagCLI:
                 safe_title = re.sub(r'[\\/*?:"<>|\r\n\t]', "", song_title).replace(" ", "_")[:40]
                 generated_styles = []
                 style_records = []
-                self.save_session(song_title, lyrics_original, selected_models, generated_styles, style_records)
+                timings = {
+                    "generation": {},
+                    "scoring": {},
+                    "session_created_at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                }
+                self.save_session(song_title, lyrics_original, selected_models, generated_styles, style_records, timings)
             
             # Step 2: Generate styles for each chosen model
             models_done = set(gen_model for _, gen_model in generated_styles)
@@ -256,11 +272,14 @@ class MultiModelTagCLI:
                 client = OllamaClient(model=model_name)
                 prompt_text = f"歌词：\n\n标题：{song_title}\n{lyrics_original}"
                 
+                gen_start = time.time()
                 style_suggestions = client.call(
                     prompt_text,
                     system_prompt=self.style_prompt,
                     spinner=Spinner(f"正在生成 ({model_name})")
                 )
+                gen_elapsed = time.time() - gen_start
+                timings["generation"][model_name] = gen_elapsed
                 
                 if not style_suggestions:
                     print(f"{self.C_YELLOW}模型 {model_name} 风格策划失败，跳过。{self.C_RESET}")
@@ -270,7 +289,7 @@ class MultiModelTagCLI:
                 for style in parsed:
                     generated_styles.append((style, model_name))
                 
-                self.save_session(song_title, lyrics_original, selected_models, generated_styles, style_records)
+                self.save_session(song_title, lyrics_original, selected_models, generated_styles, style_records, timings)
             
             if not generated_styles:
                 print(f"{self.C_YELLOW}未成功生成任何风格提示词，请重试。{self.C_RESET}")
@@ -281,7 +300,12 @@ class MultiModelTagCLI:
             style_records = []
             for style, gen_model in generated_styles:
                 if style in existing_styles:
-                    style_records.append(existing_styles[style])
+                    record = existing_styles[style]
+                    # Migration: convert scalar scores to list if resuming from an older single-try session
+                    for scorer, val in list(record["scores"].items()):
+                        if not isinstance(val, list):
+                            record["scores"][scorer] = [val]
+                    style_records.append(record)
                 else:
                     style_records.append({
                         "style": style,
@@ -289,51 +313,77 @@ class MultiModelTagCLI:
                         "scores": {}
                     })
             
-            # Step 3: Batch scoring
-            print(f"\n{self.C_CYAN}开始对生成的 {len(generated_styles)} 个风格提示词进行交叉评分...{self.C_RESET}")
+            # Step 3: Batch scoring (3 tries)
+            print(f"\n{self.C_CYAN}开始对生成的 {len(generated_styles)} 个风格提示词进行交叉评分 (共 3 轮)...{self.C_RESET}")
             
+            num_tries = 3
             batch_size = 5
-            for i in range(0, len(style_records), batch_size):
-                batch = style_records[i:i+batch_size]
-                batch_styles = [item["style"] for item in batch]
-                
-                for scorer_model in selected_models:
-                    if all(scorer_model in item["scores"] for item in batch):
-                        continue
-                        
-                    client = OllamaClient(model=scorer_model)
-                    prompt_text = f"Song Title: {song_title}\nLyrics:\n{lyrics_original}\n\nStyles to score:\n"
-                    for idx, style in enumerate(batch_styles):
-                        prompt_text += f"{idx+1}. {style}\n"
-                    prompt_text += f"\nPlease score these {len(batch_styles)} styles from 1-10 matching the song's context. Respond in the JSON format specified in the system prompt."
+            
+            for try_idx in range(num_tries):
+                print(f"\n{self.C_CYAN}--- 评分第 {try_idx + 1} 轮 ---{self.C_RESET}")
+                round_key = f"round_{try_idx+1}"
+                if round_key not in timings["scoring"]:
+                    timings["scoring"][round_key] = {}
                     
-                    spinner_msg = f"模型 {scorer_model} 正在评估样式 {i+1}-{i+len(batch)}"
-                    scores = []
-                    for attempt in range(2):
-                        response = client.call(
-                            prompt_text,
-                            system_prompt=self.system_scoring_prompt,
-                            spinner=Spinner(spinner_msg),
-                            temperature=0.2
-                        )
-                        if response:
-                            scores = self.parse_scores(response, len(batch_styles))
-                            break
-                    if not scores:
-                        scores = [5] * len(batch_styles)
+                for i in range(0, len(style_records), batch_size):
+                    batch = style_records[i:i+batch_size]
+                    batch_styles = [item["style"] for item in batch]
+                    
+                    for scorer_model in selected_models:
+                        if all(len(item["scores"].get(scorer_model, [])) > try_idx for item in batch):
+                            continue
+                            
+                        client = OllamaClient(model=scorer_model)
+                        prompt_text = f"Song Title: {song_title}\nLyrics:\n{lyrics_original}\n\nStyles to score:\n"
+                        for idx, style in enumerate(batch_styles):
+                            prompt_text += f"{idx+1}. {style}\n"
+                        prompt_text += f"\nPlease score these {len(batch_styles)} styles from 1-10 matching the song's context. Respond in the JSON format specified in the system prompt."
                         
-                    for idx, score in enumerate(scores):
-                        batch[idx]["scores"][scorer_model] = score
+                        spinner_msg = f"[轮次 {try_idx+1}/3] 模型 {scorer_model} 正在评估样式 {i+1}-{i+len(batch)}"
+                        scores = []
                         
-                    self.save_session(song_title, lyrics_original, selected_models, generated_styles, style_records)
+                        score_start = time.time()
+                        for attempt in range(2):
+                            response = client.call(
+                                prompt_text,
+                                system_prompt=self.system_scoring_prompt,
+                                spinner=Spinner(spinner_msg),
+                                temperature=0.7
+                            )
+                            if response:
+                                scores = self.parse_scores(response, len(batch_styles))
+                                break
+                        score_elapsed = time.time() - score_start
+                        timings["scoring"][round_key][scorer_model] = timings["scoring"][round_key].get(scorer_model, 0.0) + score_elapsed
+                        
+                        if not scores:
+                            scores = [5] * len(batch_styles)
+                            
+                        for idx, score in enumerate(scores):
+                            if scorer_model not in batch[idx]["scores"]:
+                                batch[idx]["scores"][scorer_model] = []
+                            
+                            while len(batch[idx]["scores"][scorer_model]) <= try_idx:
+                                if len(batch[idx]["scores"][scorer_model]) == try_idx:
+                                    batch[idx]["scores"][scorer_model].append(score)
+                                else:
+                                    batch[idx]["scores"][scorer_model].append(5)
+                            
+                        self.save_session(song_title, lyrics_original, selected_models, generated_styles, style_records, timings)
             
             # Step 4: Average and rank
             for record in style_records:
-                scores_list = list(record["scores"].values())
-                if scores_list:
-                    mean = sum(scores_list) / len(scores_list)
+                all_scores = []
+                for scorer_model, scores_list in record["scores"].items():
+                    if isinstance(scores_list, list):
+                        all_scores.extend(scores_list)
+                    else:
+                        all_scores.append(scores_list)
+                        
+                if all_scores:
+                    mean = sum(all_scores) / len(all_scores)
                     record["average_score"] = mean
-                    variance = sum((x - mean) ** 2 for x in scores_list) / len(scores_list)
+                    variance = sum((x - mean) ** 2 for x in all_scores) / len(all_scores)
                     record["std_dev"] = math.sqrt(variance)
                 else:
                     record["average_score"] = 0.0
@@ -344,6 +394,10 @@ class MultiModelTagCLI:
             # Step 5: Save result
             today = datetime.datetime.now().strftime("%Y_%m_%d")
             save_path = os.path.join("output", f"{safe_title}_{today}.md")
+            
+            total_gen_time = sum(timings["generation"].values())
+            total_score_time = sum(sum(r.values()) for r in timings["scoring"].values())
+            total_active_time = total_gen_time + total_score_time
             
             try:
                 with open(save_path, 'w', encoding='utf-8') as f:
@@ -358,13 +412,34 @@ class MultiModelTagCLI:
                         f.write(f"- **Average Score**: {record['average_score']:.2f} (±{record['std_dev']:.2f})\n")
                         f.write(f"- **Generated by**: {record['generator_model']}\n")
                         f.write("- **Individual Scores**:\n")
-                        for scorer, score in record["scores"].items():
-                            f.write(f"  - {scorer}: {score}\n")
+                        for scorer, scores_list in record["scores"].items():
+                            scores_str = ", ".join(str(s) for s in scores_list) if isinstance(scores_list, list) else str(scores_list)
+                            f.write(f"  - {scorer}: [{scores_str}]\n")
                         f.write("\n")
+                        
+                    f.write("## Execution Metadata\n")
+                    f.write(f"- **Session Started At**: {timings.get('session_created_at', 'Unknown')}\n")
+                    f.write(f"- **Report Generated At**: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+                    f.write(f"- **Total Active Execution Time**: {total_active_time:.2f}s\n\n")
+                    
+                    f.write("### Phase 1: Style Generation Timings\n")
+                    for m, t in timings["generation"].items():
+                        f.write(f"- **{m}**: {t:.2f}s\n")
+                    f.write(f"- **Total Generation Time**: {total_gen_time:.2f}s\n\n")
+                    
+                    f.write("### Phase 2: Batch Scoring Timings\n")
+                    for rnd, model_times in sorted(timings["scoring"].items()):
+                        round_num = rnd.split('_')[1]
+                        f.write(f"- **Round {round_num}**:\n")
+                        for m, t in model_times.items():
+                            f.write(f"  - **{m}**: {t:.2f}s\n")
+                    f.write(f"- **Total Scoring Time**: {total_score_time:.2f}s\n")
+                    
                 print(f"\n{self.C_GREEN}所有处理完成! 结果已保存至 {save_path}{self.C_RESET}")
                 self.clear_session()
             except Exception as e:
                 print(f"{self.C_YELLOW}保存结果失败: {e}{self.C_RESET}")
+
 
 if __name__ == "__main__":
     try:
